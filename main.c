@@ -57,12 +57,10 @@ void shell_sort(int length, int array[length]) {
         for (int i = gap; i < length; i++) {
             int temp = array[i];
             int j = i;
-
             while (j >= gap && array[j - gap] > temp) {
                 array[j] = array[j - gap];
                 j -= gap;
             }
-
             array[j] = temp;
         }
     }
