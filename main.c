@@ -2,11 +2,12 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdint.h>
 
 
 void print_int_array(int length, int array[length]);
 void bubble_sort(int length, int array[length]);
-
+void shell_sort(int length, int array[length]);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
@@ -29,6 +30,10 @@ int main(int argc, char *argv[]) {
     bubble_sort(len, sort_me);
     print_int_array(len, sort_me);
     printf("\n");
+
+    shell_sort(len, sort_me);
+    print_int_array(len, sort_me);
+    printf("\n");
 }
 
 
@@ -43,6 +48,22 @@ void bubble_sort(int length, int array[length]) {
                 array[i-1] = temp;
                 sorted = 0;
             }
+        }
+    }
+}
+
+void shell_sort(int length, int array[length]) {
+    for (int gap = length / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < length; i++) {
+            int temp = array[i];
+            int j = i;
+
+            while (j >= gap && array[j - gap] > temp) {
+                array[j] = array[j - gap];
+                j -= gap;
+            }
+
+            array[j] = temp;
         }
     }
 }
