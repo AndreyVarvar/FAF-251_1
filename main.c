@@ -8,6 +8,7 @@
 void print_int_array(int length, int array[length]);
 void bubble_sort(int length, int array[length]);
 void shell_sort(int length, int array[length]);
+void insertion_sort(int length, int array[length]);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
@@ -32,6 +33,10 @@ int main(int argc, char *argv[]) {
     printf("\n");
 
     shell_sort(len, sort_me);
+    print_int_array(len, sort_me);
+    printf("\n");
+    
+    insertion_sort(len, sort_me);
     print_int_array(len, sort_me);
     printf("\n");
 }
@@ -63,6 +68,18 @@ void shell_sort(int length, int array[length]) {
             }
             array[j] = temp;
         }
+    }
+}
+
+void insertion_sort(int length, int array[length]) {
+    for (int i = 1 ; i < n - 1 ; i++) {
+        int temp = array[i];
+        int j = i - 1 ;
+        while (j >= 0 && array[j] > temp) {
+            array[j+1] = array[j];
+            j = j - 1;
+        }
+        array[j+1] = temp;
     }
 }
 
