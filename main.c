@@ -72,14 +72,14 @@ void shell_sort(int length, int array[length]) {
 }
 
 void insertion_sort(int length, int array[length]) {
-    for (int i = 1 ; i < n - 1 ; i++) {
-        int temp = array[i];
+    for (int i = 1 ; i < length - 1 ; i++) {
+        int key = array[i];
         int j = i - 1 ;
-        while (j >= 0 && array[j] > temp) {
+        while (j >= 0 && array[j] > key) {
             array[j+1] = array[j];
             j = j - 1;
         }
-        array[j+1] = temp;
+        array[j+1] = key;
     }
 }
 
