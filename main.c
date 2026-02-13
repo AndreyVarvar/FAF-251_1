@@ -9,6 +9,9 @@ void print_int_array(int length, int array[length]);
 void bubble_sort(int length, int array[length]);
 void shell_sort(int length, int array[length]);
 void insertion_sort(int length, int array[length]);
+void merge(int array[], int left, int mid, int right);
+void merge_sort(int array[], int left, int right);
+
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
@@ -37,6 +40,10 @@ int main(int argc, char *argv[]) {
     printf("\n");
     
     insertion_sort(len, sort_me);
+    print_int_array(len, sort_me);
+    printf("\n");
+
+    merge_sort(sort_me, 0, len - 1);
     print_int_array(len, sort_me);
     printf("\n");
 }
@@ -82,6 +89,59 @@ void insertion_sort(int length, int array[length]) {
         array[j+1] = key;
     }
 }
+
+void merge(int array[], int left, int mid, int right) {
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    int left_arr[n1], right_arr[n2];
+
+    for (i = 0; i < n1; i++)
+        left_arr[i] = array[left + i];
+    for (j = 0; j < n2; j++)
+        right_arr[j] = array[mid + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < n1 && j < n2) {
+        if (left_arr[i] <= right_arr[j]) {
+            array[k] = left_arr[i];
+            i++;
+        }
+        else {
+            array[k] = right_arr[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        array[k] = left_arr[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        array[k] = right_arr[j];
+        j++;
+        k++;
+    }
+}
+
+void merge_sort(int array[], int left, int right) {
+    if (left < right) {
+      
+        int mid = left + (right - left) / 2;
+
+        merge_sort(array, left, mid);
+        merge_sort(array, mid + 1, right);
+
+        merge(array, left, mid, right);
+    }
+}
+
 
 
 void print_int_array(int length, int array[length]) {
