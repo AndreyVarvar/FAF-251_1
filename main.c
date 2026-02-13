@@ -13,6 +13,7 @@ void merge(int array[], int left, int mid, int right);
 void merge_sort(int array[], int left, int right);
 void heap_sort(int arr[], int n);
 void heapify(int arr[], int n, int i);
+void selection_sort(int *arr, int n);
 
 
 int main(int argc, char *argv[]) {
@@ -180,6 +181,27 @@ void heapify(int arr[], int n, int i)
         arr[max] = tmp;
         heapify(arr, n, max);
     }
+}
+
+void selection_sort(int *arr, int n) {
+	int i, j, min_idx, temp;
+
+	for (i = 0; i < n - 1; i++) {
+		// Find the index of the minimum element in the unsorted portion
+		min_idx = i;
+		for (j = i + 1; j < n; j++) {
+			if (arr[j] < arr[min_idx]) {
+				min_idx = j;
+			}
+		}
+
+		// Swap the found minimum element with the first element of the unsorted portion
+		if (min_idx != i) {
+			temp = arr[i];
+			arr[i] = arr[min_idx];
+			arr[min_idx] = temp;
+		}
+	}
 }
 
 void print_int_array(int length, int array[length]) {
