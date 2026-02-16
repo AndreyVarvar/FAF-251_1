@@ -104,16 +104,22 @@ void benchmark(char* option)
 }
 
 void bubble_sort(int *arr, int length) {
-    uint8_t sorted = 0;
-    while (!sorted) {
-        sorted = 1;
-        for(int i = 1; i < length; i++) {
-            if(arr[i-1] > arr[i]) {
-                int temp = arr[i];
-                arr[i] = arr[i-1];
-                arr[i-1] = temp;
-                sorted = 0;
+    for (int i = 0; i < length-1; i++)
+    {
+        int swapped = 0;
+        for (int j = 0; j < length-i-1; j++)
+        {
+            if (arr[j] > arr[j+1])
+            {
+                int tmp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = tmp;
+                swapped = 1;
             }
+        }
+        if (!swapped)
+        {
+            break;
         }
     }
 }
