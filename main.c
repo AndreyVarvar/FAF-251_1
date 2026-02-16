@@ -86,6 +86,7 @@ void benchmark(char* option)
     {
         printf("%s unsuccessfull.\n");
     }
+    free(arr);
 }
 
 void bubble_sort(int *arr, int length) {
