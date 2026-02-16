@@ -6,6 +6,10 @@
 
 #include "benchmark.h"
 #include "utils.h"
+#include "platform.h"
+#include "platform.c"
+#include "sorting.h"
+#include "sorting.c"
 
 int main(void) {
     char *options[] = {
