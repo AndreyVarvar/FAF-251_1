@@ -18,16 +18,16 @@ void benchmark(char* option);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    char** options = {
-        "selection",
-        "insertion",
-        "bubble",
-        "shell",
-        "merge",
-        "heap",
+    char *options[] = {
+        "selection\0",
+        "insertion\0",
+        "bubble\0",
+        "shell\0",
+        "merge\0",
+        "heap\0"
         //add if new sorts
     };
-    for (int i = 0; i < 6; i++) //increase if new sorts
+    for (int i = 0; i < 6-1; i++) //increase if new sorts
     {
         benchmark(options[i]);
     }
@@ -35,12 +35,13 @@ int main(int argc, char *argv[]) {
 
 void benchmark(char* option)
 {
-    int size = 1000000;
+    printf("Started %s sort.\n", option);
+    int size = 10000;
     int *arr = malloc(size * sizeof(int));
     for (int i = 0; i < size; i++)
     {
         int sign = (rand() % 2 == 1) ? 1 : -1;
-        arr[i] = (sign) * (rand() % 2000000000);
+        arr[i] = (sign) * rand();
     }
     clock_t start = clock();
     if      (strcmp("bubble", option) == 0)
@@ -80,11 +81,11 @@ void benchmark(char* option)
     }
     if (check)
     {
-        printf("%s successfull. CPU time: %d\n", option, end-start);
+        printf("%s sort successfull. CPU time: %d\n", option, end-start);
     }
     else
     {
-        printf("%s unsuccessfull.\n");
+        printf("%s sort unsuccessfull.\n", option);
     }
     free(arr);
 }
@@ -119,7 +120,7 @@ void shell_sort(int *arr, int length) {
 }
 
 void insertion_sort(int *arr, int length) {
-    for (int i = 1 ; i < length - 1 ; i++) {
+    for (int i = 1 ; i < length; i++) {
         int key = arr[i];
         int j = i - 1 ;
         while (j >= 0 && arr[j] > key) {
