@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdint.h>
+#include <string.h>
 
 
 void print_int_arr(int *arr, int length);
@@ -13,43 +14,79 @@ void merge_sort(int *arr, int left, int right);
 void heap_sort(int *arr, int n);
 void heapify(int *arr, int n, int i);
 void selection_sort(int *arr, int n);
-
+void benchmark(char* option);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-
-    int len = 50;
-    int magnitude = 1000; // -magnitude <= rand() <= +magnitude
-    int sort_me[len];
-
-    for (int i = 0; i < len; i++) {
-        int negative = rand() % 2;
-        sort_me[i] = (rand() % (2*magnitude));
-        if (negative) {
-            sort_me[i] *= -1;
-        }
+    char** options = {
+        "selection",
+        "insertion",
+        "bubble",
+        "shell",
+        "merge",
+        "heap",
+        //add if new sorts
+    };
+    for (int i = 0; i < 6; i++) //increase if new sorts
+    {
+        benchmark(options[i]);
     }
-
-    print_int_arr(sort_me, len);
-    printf("\n");
-
-    bubble_sort(sort_me, len);
-    print_int_arr(sort_me, len);
-    printf("\n");
-
-    shell_sort(sort_me, len);
-    print_int_arr(sort_me, len);
-    printf("\n");
-    
-    insertion_sort(sort_me, len);
-    print_int_arr(sort_me, len);
-    printf("\n");
-
-    merge_sort(sort_me, 0, len - 1);
-    print_int_arr(sort_me, len);
-    printf("\n");
 }
 
+void benchmark(char* option)
+{
+    int size = 1000000;
+    int *arr = malloc(size * sizeof(int));
+    for (int i = 0; i < size; i++)
+    {
+        int sign = (rand() % 2 == 1) ? 1 : -1;
+        arr[i] = (sign) * (rand() % 2000000000);
+    }
+    clock_t start = clock();
+    if      (strcmp("bubble", option) == 0)
+    {
+        bubble_sort(arr, size);
+    }
+    else if (strcmp("shell", option) == 0)
+    {
+        shell_sort(arr, size);
+    }
+    else if (strcmp("insertion", option) == 0)
+    {
+        insertion_sort(arr, size);
+    }
+    else if (strcmp("merge", option) == 0)
+    {
+        merge_sort(arr, 0, size-1);
+    }
+    else if (strcmp("heap", option) == 0)
+    {
+        heap_sort(arr, size);
+    }
+    else if(strcmp("selection", option) == 0)
+    {
+        selection_sort(arr, size);
+    }
+    //add if new sorts
+    clock_t end = clock();
+    int check = 1;
+    for (int i = 1; i < size; i++)
+    {
+        if (arr[i-1] > arr[i])
+        {
+            check = 0;
+            break;
+        }
+    }
+    if (check)
+    {
+        printf("%s successfull. CPU time: %d\n", option, end-start);
+    }
+    else
+    {
+        printf("%s unsuccessfull.\n");
+    }
+}
 
 void bubble_sort(int *arr, int length) {
     uint8_t sorted = 0;
