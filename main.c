@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
         "merge\0",
         "heap\0",
         "tim\0",
+        "stalin\0",
+        "quick\0"
         //add if new sorts
     };
     int options_len = sizeof(options) / sizeof(options[0]);
@@ -43,20 +45,20 @@ int main(int argc, char *argv[]) {
 }
 
 void selection_sort(int *arr, int length) {
-	int i, j, min_idx, temp;
-	for (i = 0; i < length - 1; i++) {
-		min_idx = i;
-		for (j = i + 1; j < length; j++) {
-			if (arr[j] < arr[min_idx]) {
-				min_idx = j;
-			}
-		}
-		if (min_idx != i) {
-			temp = arr[i];
-			arr[i] = arr[min_idx];
-			arr[min_idx] = temp;
-		}
-	}
+    int i, j, min_idx, temp;
+    for (i = 0; i < length - 1; i++) {
+        min_idx = i;
+        for (j = i + 1; j < length; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        if (min_idx != i) {
+            temp = arr[i];
+            arr[i] = arr[min_idx];
+            arr[min_idx] = temp;
+        }
+    }
 }
 
 void insertion_sort(int *arr, int start, int end) {
@@ -246,6 +248,80 @@ void tim_sort(int *arr, int length)
     free(tmp);
 }
 
+static void move_to_front(int *a, int size, int src, int dst)
+{
+    int temp = a[src];
+    for(int i = src; i > dst; --i)
+        a[i] = a[i - 1];
+    a[dst] = temp;
+}
+
+void stalin_sort(int *a, int n)
+{
+    int j = 0;
+    while(1)
+    {
+        int moved = 0;
+
+        for(int i = 0; i < n - 1 - j; ++i)
+        {
+            if(a[i] > a[i + 1])
+            {
+                move_to_front(a, n, i + 1, moved);
+                ++moved;
+            }
+        }
+
+        ++j;
+        if(moved == 0)
+            break;
+    }
+}
+//It might be a good idea to use this for the other sort functions that swap variables
+//just to reduce the amount of code
+void swap(int* a, int* b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int *a, int low, int high)
+{
+    int p = a[low];
+    int i = low;
+    int j = high;
+
+    while(i < j)
+    {
+
+        while(a[i] <= p && i <= high - 1)
+        {
+            i++;
+        }
+        while(a[j] > p && j >= low + 1)
+        {
+            j--;
+        }
+        if(i < j)
+        {
+            swap(&a[i], &a[j]);
+        }
+    }
+    swap(&a[low], &a[j]);
+    return j;
+}
+
+void quick_sort(int *a, int low, int high)
+{
+    if(low < high)
+    {
+        int cut = partition(a, low, high);
+        quick_sort(a, low, cut - 1);
+        quick_sort(a, cut + 1, high);
+    }
+}
+
 int find_run(int* arr, int start, int length)
 {
     int end = start + 1;
@@ -310,6 +386,14 @@ void benchmark(char* option)
     {
         tim_sort(arr, size);
     }
+    else if(strcmp("stalin", option) == 0)
+    {
+        stalin_sort(arr, size);
+    }
+    else if(strcmp("quick", option) == 0)
+    {
+        quick_sort(arr, 0, size-1);
+    }
     //add if new sorts
     clock_t end = clock();
     int check = 1;
@@ -323,7 +407,7 @@ void benchmark(char* option)
     }
     if (check)
     {
-        printf("%s sort successfull. CPU time: %d\n", option, end-start);
+        printf("%s sort successfull. CPU time: %ld\n", option, end-start);
     }
     else
     {
