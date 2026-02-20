@@ -277,6 +277,40 @@ void stalin_sort(int *a, int n)
             break;
     }
 }
+
+int *cruel_stalin_sort(int *arr, int *length)
+{
+    if (*length <= 1)
+        return arr;   // nothing to do
+
+    int new_length = 1;
+    int current_element = arr[0];
+    for (int i = 1; i < *length; ++i)
+        if (arr[i] >= current_element)
+        {
+            current_element = arr[i];
+            new_length++;
+        }
+
+    int *new_arr = malloc(new_length * sizeof *new_arr);
+
+    current_element = arr[0];
+    new_arr[0] = current_element;
+
+    int stalin_index = 1;
+    for (int i = 1; i < *length; ++i)
+        if (arr[i] >= current_element)
+        {
+            new_arr[stalin_index] = arr[i];
+            current_element = arr[i];
+            stalin_index++;
+        }
+
+    free(arr);
+    *length = new_length;
+    return new_arr;
+}
+
 //It might be a good idea to use this for the other sort functions that swap variables
 //just to reduce the amount of code
 void swap(int* a, int* b)
@@ -350,7 +384,7 @@ int find_run(int* arr, int start, int length)
 void benchmark(char* option)
 {
     printf("Started %s sort.\n", option);
-    int size = 100000000;
+    int size = 100000;
     int *arr = malloc(size * sizeof(int));
     for (int i = 0; i < size; i++)
     {
@@ -388,7 +422,7 @@ void benchmark(char* option)
     }
     else if(strcmp("stalin", option) == 0)
     {
-        stalin_sort(arr, size);
+        arr = cruel_stalin_sort(arr, &size);
     }
     else if(strcmp("quick", option) == 0)
     {
@@ -407,7 +441,7 @@ void benchmark(char* option)
     }
     if (check)
     {
-        printf("%s sort successfull. CPU time: %ld\n", option, end-start);
+        printf("%s sort successfull.\nTime: %lf\n\n", option, (double)(end-start) / CLOCKS_PER_SEC);
     }
     else
     {
