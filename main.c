@@ -19,12 +19,12 @@ void heapify(int *arr, int length, int current);
 void tim_sort(int *arr, int length);
 int find_run(int *arr, int start, int length);
 // Utility
-void benchmark(char* option);
+void random_benchmark(char **options, int options_len, int arr_size, time_t );
+int *benchmark(char *option, int *arr, int size);
 void print_int_arr(int *arr, int length);
 void reverse(int *arr, int start, int end);
 
 int main(int argc, char *argv[]) {
-    srand(time(NULL));
     char *options[] = {
         "selection\0",
         "insertion\0",
@@ -38,10 +38,8 @@ int main(int argc, char *argv[]) {
         //add if new sorts
     };
     int options_len = sizeof(options) / sizeof(options[0]);
-    for (int i = 0; i < options_len; i++) 
-    {
-        benchmark(options[i]);
-    }
+    int arr_size = 100000;
+    random_benchmark(options, options_len, arr_size, time(NULL));
 }
 
 void selection_sort(int *arr, int length) {
@@ -381,73 +379,74 @@ int find_run(int* arr, int start, int length)
     return end;
 }
 
-void benchmark(char* option)
+void random_benchmark(char **options, int options_len, int arr_size, time_t seed)
+{
+    srand(seed);
+
+    int *arr = malloc(arr_size * sizeof *arr);
+
+    for (int i = 0; i < arr_size; i++)
+    {
+        int sign = (rand() % 2) ? 1 : -1;
+        arr[i] = sign * rand();
+    }
+
+    for (int i = 0; i < options_len; ++i)
+    {
+        int *copy_arr = malloc(arr_size * sizeof *copy_arr);
+        memcpy(copy_arr, arr, arr_size * sizeof *copy_arr);
+
+        copy_arr = benchmark(options[i], copy_arr, arr_size);
+
+        free(copy_arr);
+    }
+
+    free(arr);
+}
+
+int *benchmark(char *option, int *arr, int size)
 {
     printf("Started %s sort.\n", option);
-    int size = 100000;
-    int *arr = malloc(size * sizeof(int));
-    for (int i = 0; i < size; i++)
-    {
-        int sign = (rand() % 2 == 1) ? 1 : -1;
-        arr[i] = (sign) * rand();
-    }
+
     clock_t start = clock();
-    if      (strcmp("selection", option) == 0)
-    {
+
+    if (strcmp("selection", option) == 0)
         selection_sort(arr, size);
-    }
     else if (strcmp("insertion", option) == 0)
-    {
-        insertion_sort(arr, 0, size);
-    }
+        insertion_sort(arr, 0, size - 1);
     else if (strcmp("bubble", option) == 0)
-    {
         bubble_sort(arr, size);
-    }
     else if (strcmp("shell", option) == 0)
-    {
         shell_sort(arr, size);
-    }
     else if (strcmp("merge", option) == 0)
-    {
-        merge_sort(arr, 0, size-1);
-    }
+        merge_sort(arr, 0, size - 1);
     else if (strcmp("heap", option) == 0)
-    {
         heap_sort(arr, size);
-    }
-    else if(strcmp("tim", option) == 0)
-    {
+    else if (strcmp("tim", option) == 0)
         tim_sort(arr, size);
-    }
-    else if(strcmp("stalin", option) == 0)
-    {
+    else if (strcmp("stalin", option) == 0)
         arr = cruel_stalin_sort(arr, &size);
-    }
-    else if(strcmp("quick", option) == 0)
-    {
-        quick_sort(arr, 0, size-1);
-    }
-    //add if new sorts
+    else if (strcmp("quick", option) == 0)
+        quick_sort(arr, 0, size - 1);
+
     clock_t end = clock();
+
     int check = 1;
     for (int i = 1; i < size; i++)
     {
-        if (arr[i-1] > arr[i])
+        if (arr[i - 1] > arr[i])
         {
             check = 0;
             break;
         }
     }
-    if (check)
-    {
-        printf("%s sort successfull.\nTime: %lf\n\n", option, (double)(end-start) / CLOCKS_PER_SEC);
-    }
-    else
-    {
-        printf("%s sort unsuccessfull.\n", option);
-    }
-    free(arr);
+
+    printf("%s sort %s.\nTime: %lf\n\n",
+           option,
+           check ? "successful" : "unsuccessful",
+           (double)(end - start) / CLOCKS_PER_SEC);
+
+    return arr;
 }
 
 void print_int_arr(int *arr, int length) {
