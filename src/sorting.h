@@ -1,25 +1,25 @@
 #ifndef SORTING_H
 #define SORTING_H
 
-#include "platform.h"
+#include "base.h"
 
-void selection_sort(int *arr, int length);
-void insertion_sort(int *arr, int start, int end);
-void bubble_sort(int *arr, int length);
-void shell_sort(int *arr, int length);
+void selection_sort(i32 *arr, i32 length);
+void insertion_sort(i32 *arr, i32 start, i32 end);
+void bubble_sort(i32 *arr, i32 length);
+void shell_sort(i32 *arr, i32 length);
 // Merge sort
-void merge_sort(int *arr, int left, int right);
-void merge_sort_rec(int *arr, int *tmp, int left, int right);
-void merge(int *arr, int *tmp, int left, int mid, int right);
+void merge_sort(i32 *arr, i32 left, i32 right);
+void merge_sort_rec(i32 *arr, i32 *tmp, i32 left, i32 right);
+void merge(i32 *arr, i32 *tmp, i32 left, i32 mid, i32 right);
 // Heap sort
-void heap_sort(int *arr, int lenght);
-void heapify(int *arr, int length, int current);
+void heap_sort(i32 *arr, i32 lenght);
+void heapify(i32 *arr, i32 length, i32 current);
 // Timsort
-void tim_sort(int *arr, int length);
-int find_run(int *arr, int start, int length);
+void tim_sort(i32 *arr, i32 length);
+i32 find_run(i32 *arr, i32 start, i32 length);
 // Utility
 void benchmark(char* option);
-void print_int_arr(int *arr, int length);
-void reverse(int *arr, int start, int end);
+void pri32_i32_arr(i32 *arr, i32 length);
+void reverse(i32 *arr, i32 start, i32 end);
 
 #endif

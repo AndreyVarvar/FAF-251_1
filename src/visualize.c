@@ -5,7 +5,7 @@
 #include <SDL3/SDL.h>
 
 #include "visualize.h"
-#include "platform.h"
+#include "base.h"
 
 void print_error();
 void render_display(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *display);

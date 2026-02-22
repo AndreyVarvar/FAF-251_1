@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "base.h"
 #include "sorting.h"
-#include "platform.h"
 
-void selection_sort(int *arr, int length) {
-    int i, j, min_idx, temp;
+void selection_sort(i32 *arr, i32 length) {
+    i32 i, j, min_idx, temp;
     for (i = 0; i < length - 1; i++) {
         min_idx = i;
         for (j = i + 1; j < length; j++) {
@@ -24,11 +24,11 @@ void selection_sort(int *arr, int length) {
     }
 }
 
-void insertion_sort(int *arr, int start, int end) {
-    for (int i = start + 1 ; i <= end; i++) 
+void insertion_sort(i32 *arr, i32 start, i32 end) {
+    for (i32 i = start + 1 ; i <= end; i++) 
     {
-        int key = arr[i];
-        int j = i - 1 ;
+        i32 key = arr[i];
+        i32 j = i - 1 ;
         while (j >= start && arr[j] > key) 
         {
             arr[j+1] = arr[j];
@@ -38,15 +38,15 @@ void insertion_sort(int *arr, int start, int end) {
     }
 }
 
-void bubble_sort(int *arr, int length) {
-    for (int i = 0; i < length-1; i++)
+void bubble_sort(i32 *arr, i32 length) {
+    for (i32 i = 0; i < length-1; i++)
     {
-        int swapped = 0;
-        for (int j = 0; j < length-i-1; j++)
+        i32 swapped = 0;
+        for (i32 j = 0; j < length-i-1; j++)
         {
             if (arr[j] > arr[j+1])
             {
-                int tmp = arr[j];
+                i32 tmp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = tmp;
                 swapped = 1;
@@ -59,11 +59,11 @@ void bubble_sort(int *arr, int length) {
     }
 }
 
-void shell_sort(int *arr, int length) {
-    for (int gap = length / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < length; i++) {
-            int temp = arr[i];
-            int j = i;
+void shell_sort(i32 *arr, i32 length) {
+    for (i32 gap = length / 2; gap > 0; gap /= 2) {
+        for (i32 i = gap; i < length; i++) {
+            i32 temp = arr[i];
+            i32 j = i;
             while (j >= gap && arr[j - gap] > temp) {
                 arr[j] = arr[j - gap];
                 j -= gap;
@@ -72,16 +72,16 @@ void shell_sort(int *arr, int length) {
         }
     }
 }
-void merge_sort(int *arr, int left, int right)
+void merge_sort(i32 *arr, i32 left, i32 right)
 {
-    int *tmp = malloc((right - left + 1) * sizeof(int));
+    i32 *tmp = malloc((right - left + 1) * sizeof(i32));
     merge_sort_rec(arr, tmp, left, right);
     free(tmp);
 }
 
-void merge_sort_rec(int *arr, int *tmp, int left, int right) {
+void merge_sort_rec(i32 *arr, i32 *tmp, i32 left, i32 right) {
     if (left < right) {
-        int mid = left + (right - left) / 2;
+        i32 mid = left + (right - left) / 2;
 
         merge_sort_rec(arr, tmp, left, mid);
         merge_sort_rec(arr, tmp, mid + 1, right);
@@ -90,14 +90,14 @@ void merge_sort_rec(int *arr, int *tmp, int left, int right) {
     }
 }
 
-void merge(int *arr, int *tmp, int left, int mid, int right) {
-    int i = left;
-    int j = mid + 1;
-    int k = left;
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+void merge(i32 *arr, i32 *tmp, i32 left, i32 mid, i32 right) {
+    i32 i = left;
+    i32 j = mid + 1;
+    i32 k = left;
+    i32 n1 = mid - left + 1;
+    i32 n2 = right - mid;
 
-    for (int x = left; x <= right; x++)
+    for (i32 x = left; x <= right; x++)
     {
         tmp[x] = arr[x];
     }
@@ -116,27 +116,27 @@ void merge(int *arr, int *tmp, int left, int mid, int right) {
     }
 }
 
-void heap_sort(int *arr, int length)
+void heap_sort(i32 *arr, i32 length)
 {
-    for (int i = length/2; i >= 0; i--)
+    for (i32 i = length/2; i >= 0; i--)
     {
         heapify(arr, length, i);
     }
-    for (int i = length - 1; i > 0; i--)
+    for (i32 i = length - 1; i > 0; i--)
     {
-        int tmp = arr[0];
+        i32 tmp = arr[0];
         arr[0] = arr[i];
         arr[i] = tmp;
         heapify(arr, i, 0);
     }
 }
 
-void heapify(int *arr, int length, int i)
+void heapify(i32 *arr, i32 length, i32 i)
 {
-    int max = i;
-    int left = 2*i + 1;
-    int right = 2*i + 2;
-    
+    i32 max = i;
+    i32 left = 2*i + 1;
+    i32 right = 2*i + 2;
+
     if (left < length && arr[left] > arr[max])
     {
         max = left;
@@ -147,28 +147,28 @@ void heapify(int *arr, int length, int i)
     }
     if (max != i)
     {
-        int tmp = arr[i];
+        i32 tmp = arr[i];
         arr[i] = arr[max];
         arr[max] = tmp;
         heapify(arr, length, max);
     }
 }
 
-void tim_sort(int *arr, int length)
+void tim_sort(i32 *arr, i32 length)
 {
-    int min_run = 32;
-    int *tmp = malloc(length * sizeof(int));
-    int runs[128][2];
-    int runs_len = 0;
+    i32 min_run = 32;
+    i32 *tmp = malloc(length * sizeof(i32));
+    i32 runs[128][2];
+    i32 runs_len = 0;
 
-    int i = 0;
+    i32 i = 0;
     while (i < length)
     {
-        int run_end = find_run(arr, i, length);
-        int run_len = run_end - i;
+        i32 run_end = find_run(arr, i, length);
+        i32 run_len = run_end - i;
         if (run_len < min_run)
         {
-            int end = (i + min_run < length) ? i + min_run : length;
+            i32 end = (i + min_run < length) ? i + min_run : length;
             insertion_sort(arr, i, end - 1);
             run_end = end;
         }
@@ -179,13 +179,13 @@ void tim_sort(int *arr, int length)
 
         while (runs_len > 1)
         {
-            int l1 = runs[runs_len - 2][0];
-            int r1 = runs[runs_len - 2][1];
-            int l2 = runs[runs_len - 1][0];
-            int r2 = runs[runs_len - 1][1];
+            i32 l1 = runs[runs_len - 2][0];
+            i32 r1 = runs[runs_len - 2][1];
+            i32 l2 = runs[runs_len - 1][0];
+            i32 r2 = runs[runs_len - 1][1];
 
-            int len1 = r1 - l1;
-            int len2 = r2 - l2;
+            i32 len1 = r1 - l1;
+            i32 len2 = r2 - l2;
 
             if (len1 <= len2)
             {
@@ -199,10 +199,10 @@ void tim_sort(int *arr, int length)
     }
     while (runs_len > 1)
     {
-        int l1 = runs[runs_len - 2][0];
-        int r1 = runs[runs_len - 2][1];
-        int l2 = runs[runs_len - 1][0];
-        int r2 = runs[runs_len - 1][1];
+        i32 l1 = runs[runs_len - 2][0];
+        i32 r1 = runs[runs_len - 2][1];
+        i32 l2 = runs[runs_len - 1][0];
+        i32 r2 = runs[runs_len - 1][1];
         merge(arr, tmp, l1, r1 - 1, r2 - 1);
         runs_len--;
         runs[runs_len - 1][0] = l1;
@@ -211,22 +211,22 @@ void tim_sort(int *arr, int length)
     free(tmp);
 }
 
-static void move_to_front(int *a, int size, int src, int dst)
+static void move_to_front(i32 *a, i32 size, i32 src, i32 dst)
 {
-    int temp = a[src];
-    for(int i = src; i > dst; --i)
+    i32 temp = a[src];
+    for(i32 i = src; i > dst; --i)
         a[i] = a[i - 1];
     a[dst] = temp;
 }
 
-void stalin_sort(int *a, int n)
+void stalin_sort(i32 *a, i32 n)
 {
-    int j = 0;
+    i32 j = 0;
     while(1)
     {
-        int moved = 0;
+        i32 moved = 0;
 
-        for(int i = 0; i < n - 1 - j; ++i)
+        for(i32 i = 0; i < n - 1 - j; ++i)
         {
             if(a[i] > a[i + 1])
             {
@@ -241,27 +241,27 @@ void stalin_sort(int *a, int n)
     }
 }
 
-int *cruel_stalin_sort(int *arr, int *length)
+i32 *cruel_stalin_sort(i32 *arr, i32 *length)
 {
     if (*length <= 1)
         return arr;   // nothing to do
 
-    int new_length = 1;
-    int current_element = arr[0];
-    for (int i = 1; i < *length; ++i)
+    i32 new_length = 1;
+    i32 current_element = arr[0];
+    for (i32 i = 1; i < *length; ++i)
         if (arr[i] >= current_element)
         {
             current_element = arr[i];
             new_length++;
         }
 
-    int *new_arr = malloc(new_length * sizeof *new_arr);
+    i32 *new_arr = malloc(new_length * sizeof *new_arr);
 
     current_element = arr[0];
     new_arr[0] = current_element;
 
-    int stalin_index = 1;
-    for (int i = 1; i < *length; ++i)
+    i32 stalin_index = 1;
+    for (i32 i = 1; i < *length; ++i)
         if (arr[i] >= current_element)
         {
             new_arr[stalin_index] = arr[i];
@@ -276,18 +276,18 @@ int *cruel_stalin_sort(int *arr, int *length)
 
 //It might be a good idea to use this for the other sort functions that swap variables
 //just to reduce the amount of code
-void swap(int* a, int* b)
+void swap(i32* a, i32* b)
 {
-    int temp = *a;
+    i32 temp = *a;
     *a = *b;
     *b = temp;
 }
 
-int partition(int *a, int low, int high)
+i32 partition(i32 *a, i32 low, i32 high)
 {
-    int p = a[low];
-    int i = low;
-    int j = high;
+    i32 p = a[low];
+    i32 i = low;
+    i32 j = high;
 
     while(i < j)
     {
@@ -309,19 +309,19 @@ int partition(int *a, int low, int high)
     return j;
 }
 
-void quick_sort(int *a, int low, int high)
+void quick_sort(i32 *a, i32 low, i32 high)
 {
     if(low < high)
     {
-        int cut = partition(a, low, high);
+        i32 cut = partition(a, low, high);
         quick_sort(a, low, cut - 1);
         quick_sort(a, cut + 1, high);
     }
 }
 
-int find_run(int* arr, int start, int length)
+i32 find_run(i32* arr, i32 start, i32 length)
 {
-    int end = start + 1;
+    i32 end = start + 1;
     if (end == length)
     {
         return end;
@@ -344,14 +344,36 @@ int find_run(int* arr, int start, int length)
     return end;
 }
 
+void print_i32_arr(i32 *arr, i32 length) {
+    printf("{");
+    for (i32 i = 0; i < length; i++) {
+        printf("%d", arr[i]);
+
+        if (i != length-1) {
+            printf(", ");
+        }
+    }
+    printf("}\n");
+}
+
+void reverse(i32 *arr, i32 start, i32 end)
+{
+    for (i32 i = 0; i < (start + end)/2 - start; i++)
+    {
+        i32 tmp = arr[start + i];
+        arr[start + i] = arr[end - i];
+        arr[end - i] = tmp;
+    }
+}
+
 void benchmark(char* option)
 {
     printf("Started %s sort.\n", option);
-    int size = 1000;
-    int *arr = malloc(size * sizeof(int));
-    for (int i = 0; i < size; i++)
+    i32 size = 1000000;
+    i32 *arr = malloc(size * sizeof(i32));
+    for (i32 i = 0; i < size; i++)
     {
-        int sign = (rand() % 2 == 1) ? 1 : -1;
+        i32 sign = (rand() % 2 == 1) ? 1 : -1;
         arr[i] = (sign) * rand();
     }
     clock_t start = clock();
@@ -393,8 +415,8 @@ void benchmark(char* option)
     }
     //add if new sorts
     clock_t end = clock();
-    int check = 1;
-    for (int i = 1; i < size; i++)
+    i32 check = 1;
+    for (i32 i = 1; i < size; i++)
     {
         if (arr[i-1] > arr[i])
         {
@@ -411,26 +433,4 @@ void benchmark(char* option)
         printf("%s sort unsuccessfull.\n", option);
     }
     free(arr);
-}
-
-void print_int_arr(int *arr, int length) {
-    printf("{");
-    for (int i = 0; i < length; i++) {
-        printf("%d", arr[i]);
-
-        if (i != length-1) {
-            printf(", ");
-        }
-    }
-    printf("}\n");
-}
-
-void reverse(int *arr, int start, int end)
-{
-    for (int i = 0; i < (start + end)/2 - start; i++)
-    {
-        int tmp = arr[start + i];
-        arr[start + i] = arr[end - i];
-        arr[end - i] = tmp;
-    }
 }

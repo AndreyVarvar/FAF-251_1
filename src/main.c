@@ -4,11 +4,15 @@
 #include <string.h>
 #include <time.h>
 
-#include "benchmark.h"
+#include "../include/benchmark.h"
 #include "utils.h"
-#include "platform.h"
+#include "base.h"
 #include "sorting.h"
 #include "visualize.h"
+#include "visualize.c"
+#include "sorting.c"
+
+void print_help(char *program_name);
 
 int main(void) {
     char *options[] = {
@@ -99,4 +103,94 @@ int main(void) {
 
     fclose(csv_out);
     return 0;
+}
+
+int main(int argc, char *argv[]) {
+    srand(time(NULL));
+
+    char *sort_flags[] = {
+        "-s",
+        "-i",
+        "-b",
+        "-sh",
+        "-m",
+        "-h",
+        "-t",
+        "-st",
+        "-q",
+    };
+
+    i32 flags_len = sizeof(sort_flags) / sizeof(sort_flags[0]);
+    u8 sorts_selected[flags_len] = {};
+    u8 how_many_sorts = 0;
+
+    for (u8 i=0;i<flags_len;i++) {
+        sorts_selected[i] = 0;
+    }
+
+    char *output_file = "output.txt";
+    char *input_file = NULL;
+
+    // Goofy ahh argument parsing
+    if (argc > 1) {
+        for (u8 i=1;i<argc;i++) {
+            if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+                print_help(argv[0]);
+                return 0;
+            } else {
+                u8 found_flag = 0;
+                for (u8 j=0;j<flags_len;j++) {
+                    if (strcmp(argv[i], sort_flags[j]) == 0) {
+                        sorts_selected[how_many_sorts] = j;
+                        found_flag = 1;
+                        how_many_sorts++;
+                        break;
+                    }
+                }
+                if (strcmp(argv[i], "-o") == 0) {
+                    if (i + 1 < argc) {
+                        output_file = argv[i + 1];
+                        found_flag = 1;
+                        i++;
+                    } else {
+                        printf("No output file selected.\n");
+                        return 0;
+                    }
+                }
+                if (!found_flag) {
+                    input_file = argv[i];
+                }
+            }
+        }
+    } else {
+        print_help(argv[0]);
+        return 0;
+    }
+
+    if (!input_file) {
+        printf("No input file selected.\n");
+        return 0;
+    }
+
+    if (!how_many_sorts) {
+        printf("No sorts selected.\n");
+        return 0;
+    }
+
+    printf("%d, %s, %s\n", how_many_sorts, output_file, input_file);
+}
+
+void print_help(char *program_name) {
+    printf("Usage: %s [options] source_file output_file.\n", program_name);
+    printf("\t-s\tUse Selection sort.\n");
+    printf("\t-i\tUse Insertion sort.\n");
+    printf("\t-b\tUse Bubble sort.\n");
+    printf("\t-sh\tUse Shell sort.\n");
+    printf("\t-m\tUse Merge sort.\n");
+    printf("\t-h\tUse Heap sort.\n");
+    printf("\t-t\tUse Time sort.\n");
+    printf("\t-st\tUse Stalin sort.\n");
+    printf("\t-q\tUse Quick sort.\n");
+    printf("\t-o\tPlace output into <file>.\n");
+    printf("-h, --help\tDisplay useful info.\n");
 }
