@@ -11,22 +11,26 @@ void print_error();
 void render_display(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *display);
 void render_array(SDL_Renderer *renderer, SDL_Texture *display, SDL_Texture *texture, int *array, int length);
 
-void run(int *arr, int length) {
-    if (!SDL_Init(SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_VIDEO)) {
+void run(int *arr, int length)
+{
+    if (!SDL_Init(SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_VIDEO))
+    {
         print_error();
         return;
     }
 
     SDL_Window *window = SDL_CreateWindow("Sorting Visualization", 1000, 1000, SDL_WINDOW_RESIZABLE);
 
-    if (window == NULL) {
+    if (window == NULL)
+    {
         print_error();
         return;
     }
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
-    if (renderer == NULL) {
+    if (renderer == NULL)
+    {
         print_error();
         return;
     }
@@ -35,13 +39,19 @@ void run(int *arr, int length) {
     SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, sqrt(length), sqrt(length));
 
     u8 done = 0;
-    SDL_FRect rect = {.w = sqrt(length), .h = sqrt(length)};
-    while (!done) {
+    SDL_FRect rect = {
+        .w = sqrt(length),
+        .h = sqrt(length)
+    };
+
+    while (!done)
+    {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         SDL_Event event;
-        while (SDL_PollEvent(&event) == 1) {
+        while (SDL_PollEvent(&event) == 1)
+        {
             if (event.type == SDL_EVENT_QUIT) done = 1;
         }
 
@@ -55,7 +65,8 @@ void run(int *arr, int length) {
     SDL_Quit();
 }
 
-void render_display(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *display) {
+void render_display(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *display)
+{
     SDL_SetRenderTarget(renderer, NULL);
 
     i32 window_width, window_height;
@@ -74,14 +85,18 @@ void render_display(SDL_Renderer *renderer, SDL_Window *window, SDL_Texture *dis
     SDL_RenderTexture(renderer, display, NULL, &rect);
 }
 
-void print_error() {
+void print_error()
+{
     fprintf(stderr, "%s", SDL_GetError());
 }
 
-void render_array(SDL_Renderer *renderer, SDL_Texture *display, SDL_Texture *texture, int *array, int length) {
+void render_array(SDL_Renderer *renderer, SDL_Texture *display, SDL_Texture *texture, int *array, int length)
+{
     SDL_SetRenderTarget(renderer, texture);
-    for (int y=0;y<sqrt(length);y++) {
-        for (int x=0;x<sqrt(length);x++) {
+    for (int y=0;y<sqrt(length);y++)
+    {
+        for (int x=0;x<sqrt(length);x++)
+        {
             u8 r = (u8)((double)x / sqrt(length) * 255);
             u8 g = (u8)((double)(x + y)/length * 255);
             u8 b = (u8)((double)y / sqrt(length) * 255);

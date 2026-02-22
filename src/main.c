@@ -105,74 +105,97 @@ int main(void) {
     return 0;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     srand(time(NULL));
 
-    char *sort_flags[] = {
-        "-s",
-        "-i",
-        "-b",
-        "-sh",
-        "-m",
-        "-h",
-        "-t",
-        "-st",
-        "-q",
+    // more concise than what was before (Sorry Max)
+    char *sort_flags[] =
+    {
+        "-s", // Selection sort
+        "-i", // Insertion sort
+        "-b", // Bubble sort
+        "-sh", // Shell sort
+        "-m", // Merge sort
+        "-h", // Heap sort
+        "-t", // Tim sort
+        "-st", // Stalin sort
+        "-q", // Quick sort
     };
 
     i32 flags_len = sizeof(sort_flags) / sizeof(sort_flags[0]);
     u8 sorts_selected[flags_len] = {};
     u8 how_many_sorts = 0;
 
-    for (u8 i=0;i<flags_len;i++) {
+    for (u8 i=0;i<flags_len;i++)
+    {
         sorts_selected[i] = 0;
     }
 
     char *output_file = "output.txt";
     char *input_file = NULL;
+    u8 visualize = 0; // I'm honestly too lazy to do any bit masking shinanigans for these flags :\
 
-    // Goofy ahh argument parsing
+    // Goofy ahh argument parsing (Sorry Cristi)
+    // Probably should move this to a function... (Aiden)
     if (argc > 1) {
-        for (u8 i=1;i<argc;i++) {
-            if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+        for (u8 i=1;i<argc;i++)
+        {
+            if (strcmp(argv[i], "--help") == 0)
+            {
                 print_help(argv[0]);
                 return 0;
-            } else {
+            } else
+            {
                 u8 found_flag = 0;
-                for (u8 j=0;j<flags_len;j++) {
-                    if (strcmp(argv[i], sort_flags[j]) == 0) {
+                for (u8 j=0;j<flags_len;j++)
+                {
+                    if (strcmp(argv[i], sort_flags[j]) == 0)
+                    {
                         sorts_selected[how_many_sorts] = j;
                         found_flag = 1;
                         how_many_sorts++;
                         break;
                     }
                 }
-                if (strcmp(argv[i], "-o") == 0) {
-                    if (i + 1 < argc) {
+                if (strcmp(argv[i], "-o") == 0)
+                {
+                    if (i + 1 < argc)
+                    {
                         output_file = argv[i + 1];
                         found_flag = 1;
                         i++;
-                    } else {
+                    } else
+                    {
                         printf("No output file selected.\n");
                         return 0;
                     }
                 }
-                if (!found_flag) {
+                if (strcmp(argv[i], "-g") == 0)
+                {
+                    found_flag = 1;
+                    visualize = 1;
+                }
+                if (!found_flag)
+                {
                     input_file = argv[i];
                 }
             }
         }
-    } else {
+    } else
+    {
         print_help(argv[0]);
         return 0;
     }
 
-    if (!input_file) {
+    if (!input_file)
+    {
         printf("No input file selected.\n");
         return 0;
     }
 
-    if (!how_many_sorts) {
+    if (!how_many_sorts)
+    {
         printf("No sorts selected.\n");
         return 0;
     }
@@ -180,7 +203,8 @@ int main(int argc, char *argv[]) {
     printf("%d, %s, %s\n", how_many_sorts, output_file, input_file);
 }
 
-void print_help(char *program_name) {
+void print_help(char *program_name)
+{
     printf("Usage: %s [options] source_file output_file.\n", program_name);
     printf("\t-s\tUse Selection sort.\n");
     printf("\t-i\tUse Insertion sort.\n");
@@ -191,6 +215,7 @@ void print_help(char *program_name) {
     printf("\t-t\tUse Time sort.\n");
     printf("\t-st\tUse Stalin sort.\n");
     printf("\t-q\tUse Quick sort.\n");
+    printf("\t-g\tVisualize the sorting process.\n");
     printf("\t-o\tPlace output into <file>.\n");
-    printf("-h, --help\tDisplay useful info.\n");
+    printf("\t--help\tDisplay useful info.\n");
 }
