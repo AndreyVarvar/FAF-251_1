@@ -26,9 +26,9 @@ void reverse(int *arr, int start, int end);
 
 int main(int argc, char *argv[]) {
     char *options[] = {
-        "selection\0",
-        "insertion\0",
-        "bubble\0",
+        // "selection\0",
+        // "insertion\0",
+        // "bubble\0",
         "shell\0",
         "merge\0",
         "heap\0",
