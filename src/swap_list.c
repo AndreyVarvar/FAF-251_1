@@ -1,7 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
-#include "linked_list.h"
+#include "swap_list.h"
 
-SwapNode *list_init(i32 i, i32 j)
+SwapNode *swap_list_init(i32 i, i32 j)
 {
     SwapNode *node = calloc(1, sizeof(SwapNode));
 
@@ -15,7 +16,7 @@ SwapNode *list_init(i32 i, i32 j)
     return node;
 }
 
-SwapNode *swap_push(SwapNode *node, i32 i, i32 j)
+SwapNode *swap_list_push(SwapNode *node, i32 i, i32 j)
 {
     node->next = calloc(1, sizeof(SwapNode));
 
@@ -31,11 +32,13 @@ SwapNode *swap_push(SwapNode *node, i32 i, i32 j)
 
 void swap_list_destroy(SwapNode *root)
 {
-    SwapNode *current_node = root->next;
+    SwapNode *current_node = root;
+    SwapNode *next_node = root->next;
 
-    while (current_node->next)
+    while (next_node)
     {
-        current_node = current_node->next;
+        current_node = next_node;
+        next_node = current_node->next;
         free(current_node->prev);
     }
 

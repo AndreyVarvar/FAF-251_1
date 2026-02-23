@@ -11,7 +11,7 @@ typedef struct SwapNode {
 } SwapNode;
 
 SwapNode *swap_list_init(i32 i, i32 j);
-SwapNode *swap_push(SwapNode *node, i32 i, i32 j);
+SwapNode *swap_list_push(SwapNode *node, i32 i, i32 j);
 void swap_list_destroy(SwapNode *root);
 
 #endif

@@ -7,15 +7,6 @@
 #include "base.h"
 #include "sorting.h"
 
-//It might be a good idea to use this for the other sort functions that swap variables
-//just to reduce the amount of code (Aiden agrees with this)
-void swap(i32* a, i32* b)
-{
-    i32 temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
 void selection_sort(i32 *arr, i32 length)
 {
     i32 min_idx;
@@ -31,7 +22,7 @@ void selection_sort(i32 *arr, i32 length)
         }
         if (min_idx != i)
         {
-            swap(arr + i, arr + min_idx);
+            SWAP(i32, arr + i, arr + min_idx);
         }
     }
 }
@@ -62,7 +53,7 @@ void bubble_sort(i32 *arr, i32 length)
         {
             if (arr[j] > arr[j+1])
             {
-                swap(arr + j, arr + j + 1);
+                SWAP(i32, arr + j, arr + j + 1);
                 swapped = 1;
             }
         }
@@ -158,7 +149,7 @@ void heapify(i32 *arr, i32 length, i32 i)
     }
     if (max != i)
     {
-        swap(arr + i, arr + max);
+        SWAP(i32, arr + i, arr + max);
         heapify(arr, length, max);
     }
 }
@@ -197,7 +188,7 @@ void reverse(i32 *arr, i32 start, i32 end)
 {
     for (i32 i = 0; i < (start + end)/2 - start; i++)
     {
-        swap(arr + start + i, arr + end - i);
+        SWAP(i32, arr + start + i, arr + end - i);
     }
 }
 
@@ -334,10 +325,10 @@ i32 partition(i32 *arr, i32 low, i32 high)
         }
         if(i < j)
         {
-            swap(&arr[i], &arr[j]);
+            SWAP(i32, arr + i, arr + j);
         }
     }
-    swap(&arr[low], &arr[j]);
+    SWAP(i32, arr + low, arr + j);
     return j;
 }
 
@@ -369,7 +360,7 @@ void print_i32_arr(i32 *arr, i32 length)
 
 void benchmark(char* sort_flag)
 {
-    i32 size = 1000;
+    i32 size = 1000000;
     i32 *arr = malloc(size * sizeof(i32));
 
     for (i32 i = 0; i < size; i++)

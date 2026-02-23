@@ -5,12 +5,14 @@
 #include <time.h>
 
 #include "../include/benchmark.h"
-#include "utils.h"
+#include "../include/utils.h"
 #include "base.h"
-#include "sorting.h"
+
+#include "../include/sorting.h"
 #include "visualize.h"
-#include "visualize.c"
-#include "sorting.c"
+#include "swap_list.h"
+#include "record.h"
+#include "draw.h"
 
 void print_help(char *program_name);
 
@@ -134,7 +136,6 @@ int main(int argc, char *argv[])
 
     char *output_file = "output.txt";
     char *input_file = NULL;
-    u8 visualize = 0; // I'm honestly too lazy to do any bit masking shinanigans for these flags :\
 
     // Goofy ahh argument parsing (Sorry Cristi)
     // Probably should move this to a function... (Aiden)
@@ -171,11 +172,6 @@ int main(int argc, char *argv[])
                         return 0;
                     }
                 }
-                if (strcmp(argv[i], "-g") == 0)
-                {
-                    found_flag = 1;
-                    visualize = 1;
-                }
                 if (!found_flag)
                 {
                     input_file = argv[i];
@@ -199,8 +195,6 @@ int main(int argc, char *argv[])
         printf("No sorts selected.\n");
         return 0;
     }
-
-    printf("%d, %s, %s\n", how_many_sorts, output_file, input_file);
 }
 
 void print_help(char *program_name)

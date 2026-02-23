@@ -3,6 +3,9 @@
 
 #include "base.h"
 
+// T is the type of the data to be swapped
+#define SWAP(T, a, b) {T temp = *(a); *(a) = *(b); *(b) = temp;}
+
 // Sorts
 void selection_sort(i32 *arr, i32 length);
 void insertion_sort(i32 *arr, i32 length);
