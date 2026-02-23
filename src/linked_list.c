@@ -1,0 +1,43 @@
+#include <stdlib.h>
+#include "linked_list.h"
+
+SwapNode *list_init(i32 i, i32 j)
+{
+    SwapNode *node = calloc(1, sizeof(SwapNode));
+
+    if (!node) return NULL;
+
+    node->i = i;
+    node->j = j;
+    node->next = NULL;
+    node->prev = NULL;
+
+    return node;
+}
+
+SwapNode *swap_push(SwapNode *node, i32 i, i32 j)
+{
+    node->next = calloc(1, sizeof(SwapNode));
+
+    if (!node->next) return NULL;
+
+    node->next->i = i;
+    node->next->j = j;
+    node->next->next = NULL;
+    node->next->prev = node;
+
+    return node->next;
+}
+
+void swap_list_destroy(SwapNode *root)
+{
+    SwapNode *current_node = root->next;
+
+    while (current_node->next)
+    {
+        current_node = current_node->next;
+        free(current_node->prev);
+    }
+
+    free(current_node);
+}
