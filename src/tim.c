@@ -54,6 +54,20 @@ static void merge(int *arr, int *tmp, int left, int mid, int right) {
     }
 }
 
+static void insertion_sort_for_tim(int *arr, int start, int end) {
+    for (int i = start + 1 ; i <= end; i++) 
+    {
+        int key = arr[i];
+        int j = i - 1 ;
+        while (j >= start && arr[j] > key) 
+        {
+            arr[j+1] = arr[j];
+            j = j - 1;
+        }
+        arr[j+1] = key;
+    }
+}
+
 void tim_sort(int *arr, int length)
 {
     int min_run = 32;
@@ -69,7 +83,7 @@ void tim_sort(int *arr, int length)
         if (run_len < min_run)
         {
             int end = (i + min_run < length) ? i + min_run : length;
-            insertion_sort(arr, i, end - 1);
+            insertion_sort_for_tim(arr, i, end - 1);
             run_end = end;
         }
         runs_len++;

@@ -10,18 +10,18 @@ static void move_to_front(int *a, int size, int src, int dst)
     a[dst] = temp;
 }
 
-void stalin_sort(int *a, int n)
+void kind_stalin_sort(int *a, int length)
 {
     int j = 0;
     while(1)
     {
         int moved = 0;
 
-        for(int i = 0; i < n - 1 - j; ++i)
+        for(int i = 0; i < length - 1 - j; ++i)
         {
             if(a[i] > a[i + 1])
             {
-                move_to_front(a, n, i + 1, moved);
+                move_to_front(a, length, i + 1, moved);
                 ++moved;
             }
         }
@@ -34,9 +34,6 @@ void stalin_sort(int *a, int n)
 
 int *cruel_stalin_sort(int *arr, int *length)
 {
-    if (*length <= 1)
-        return arr;   // nothing to do
-
     int new_length = 1;
     int current_element = arr[0];
     for (int i = 1; i < *length; ++i)

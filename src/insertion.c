@@ -1,6 +1,8 @@
 #include "sorts.h"
 
-void insertion_sort(int *arr, int start, int end) {
+void insertion_sort(int *arr, int length) {
+    int start = 0;
+    int end = length - 1;
     for (int i = start + 1 ; i <= end; i++) 
     {
         int key = arr[i];

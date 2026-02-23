@@ -6,24 +6,24 @@
 #include "benchmark.h"
 #include "sorts.h"
 
-void random_benchmark(char **options, int options_len, int arr_size, time_t seed)
+void random_benchmark(char **options, int options_length, int arr_length, time_t seed)
 {
     srand(seed);
 
-    int *arr = malloc(arr_size * sizeof *arr);
+    int *arr = malloc(arr_length * sizeof *arr);
 
-    for (int i = 0; i < arr_size; i++)
+    for (int i = 0; i < arr_length; i++)
     {
         int sign = (rand() % 2) ? 1 : -1;
         arr[i] = sign * rand();
     }
 
-    for (int i = 0; i < options_len; ++i)
+    for (int i = 0; i < options_length; ++i)
     {
-        int *copy_arr = malloc(arr_size * sizeof *copy_arr);
-        memcpy(copy_arr, arr, arr_size * sizeof *copy_arr);
+        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
 
-        copy_arr = benchmark(options[i], copy_arr, arr_size);
+        copy_arr = benchmark(options[i], copy_arr, arr_length);
 
         free(copy_arr);
     }
@@ -31,35 +31,35 @@ void random_benchmark(char **options, int options_len, int arr_size, time_t seed
     free(arr);
 }
 
-int *benchmark(char *option, int *arr, int size)
+int *benchmark(char *option, int *arr, int length)
 {
     printf("Started %s sort.\n", option);
 
     clock_t start = clock();
 
     if (strcmp("selection", option) == 0)
-        selection_sort(arr, size);
+        selection_sort(arr, length);
     else if (strcmp("insertion", option) == 0)
-        insertion_sort(arr, 0, size - 1);
+        insertion_sort(arr, length);
     else if (strcmp("bubble", option) == 0)
-        bubble_sort(arr, size);
+        bubble_sort(arr, length);
     else if (strcmp("shell", option) == 0)
-        shell_sort(arr, size);
+        shell_sort(arr, length);
     else if (strcmp("merge", option) == 0)
-        merge_sort(arr, 0, size - 1);
+        merge_sort(arr, length);
     else if (strcmp("heap", option) == 0)
-        heap_sort(arr, size);
+        heap_sort(arr, length);
     else if (strcmp("tim", option) == 0)
-        tim_sort(arr, size);
+        tim_sort(arr, length);
     else if (strcmp("stalin", option) == 0)
-        arr = cruel_stalin_sort(arr, &size);
+        arr = cruel_stalin_sort(arr, &length);
     else if (strcmp("quick", option) == 0)
-        quick_sort(arr, 0, size - 1);
+        quick_sort(arr, length);
 
     clock_t end = clock();
 
     int check = 1;
-    for (int i = 1; i < size; i++)
+    for (int i = 1; i < length; i++)
     {
         if (arr[i - 1] > arr[i])
         {

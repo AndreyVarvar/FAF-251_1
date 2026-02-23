@@ -28,12 +28,17 @@ static int partition(int *a, int low, int high)
     return j;
 }
 
-void quick_sort(int *a, int low, int high)
+static void quick_sort_rec(int *a, int low, int high)
 {
     if(low < high)
     {
         int cut = partition(a, low, high);
-        quick_sort(a, low, cut - 1);
-        quick_sort(a, cut + 1, high);
+        quick_sort_rec(a, low, cut - 1);
+        quick_sort_rec(a, cut + 1, high);
     }
+}
+
+void quick_sort(int *arr, int length)
+{
+    quick_sort_rec(arr, 0, length - 1);
 }

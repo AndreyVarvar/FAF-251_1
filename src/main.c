@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         //add if new sorts
     };
     int options_len = sizeof(options) / sizeof(options[0]);
-    int arr_size = 100000;
+    int arr_size = 10000;
     random_benchmark(options, options_len, arr_size, time(NULL));
 }
 

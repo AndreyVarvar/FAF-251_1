@@ -39,9 +39,9 @@ static void merge_sort_rec(int *arr, int *tmp, int left, int right) {
     }
 }
 
-void merge_sort(int *arr, int left, int right)
+void merge_sort(int *arr, int length)
 {
-    int *tmp = malloc((right - left + 1) * sizeof(int));
-    merge_sort_rec(arr, tmp, left, right);
+    int *tmp = malloc(length * sizeof(int));
+    merge_sort_rec(arr, tmp, 0, length - 1);
     free(tmp);
 }
