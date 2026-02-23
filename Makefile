@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -O2 -Iinclude
+CFLAGS = -Wall -Wextra -O3 -march=native -funroll-loops -Iinclude
 
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
