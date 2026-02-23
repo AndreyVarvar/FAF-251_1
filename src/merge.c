@@ -6,8 +6,6 @@ static void merge(int *arr, int *tmp, int left, int mid, int right) {
     int i = left;
     int j = mid + 1;
     int k = left;
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
 
     for (int x = left; x <= right; x++)
     {

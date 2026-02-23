@@ -28,3 +28,10 @@ void print_int_arr(int *arr, int length) {
     }
     printf("}\n");
 }
+
+void print_separator(char c, int width)
+{
+    for (int i = 0; i < width; i++)
+        putchar(c);
+    putchar('\n');
+}

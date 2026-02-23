@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-static void move_to_front(int *a, int size, int src, int dst)
+static void move_to_front(int *a, int src, int dst)
 {
     int temp = a[src];
     for(int i = src; i > dst; --i)
@@ -21,7 +21,7 @@ void kind_stalin_sort(int *a, int length)
         {
             if(a[i] > a[i + 1])
             {
-                move_to_front(a, length, i + 1, moved);
+                move_to_front(a, i + 1, moved);
                 ++moved;
             }
         }
