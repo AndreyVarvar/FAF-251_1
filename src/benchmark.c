@@ -31,6 +31,25 @@ void random_benchmark(char **options, int options_length, int arr_length, time_t
     free(arr);
 }
 
+void monotonic_benchmark(char **options, int options_length, int arr_length, int max_step)
+{
+    int *arr = malloc(arr_length * sizeof *arr);
+
+    generate_monotonic_random_steps(arr, arr_length, max_step);
+
+    for (int i = 0; i < options_length; ++i)
+    {
+        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
+
+        copy_arr = benchmark(options[i], copy_arr, arr_length);
+
+        free(copy_arr);
+    }
+
+    free(arr);
+}
+
 int *benchmark(char *option, int *arr, int length)
 {
     printf("Started %s sort.\n", option);
@@ -74,4 +93,19 @@ int *benchmark(char *option, int *arr, int length)
            (double)(end - start) / CLOCKS_PER_SEC);
 
     return arr;
+}
+
+void generate_monotonic_random_steps(int *arr, int length, int max_step)
+{
+    if (length <= 0)
+        return;
+
+    int current = -(length / 2) * max_step;
+    arr[0] = current;
+
+    for (int i = 1; i < length; i++)
+    {
+        current += 1 + rand() % max_step;
+        arr[i] = current;
+    }
 }

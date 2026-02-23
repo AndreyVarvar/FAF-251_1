@@ -5,9 +5,9 @@
 
 int main(int argc, char *argv[]) {
     char *options[] = {
-        // "selection\0",
-        // "insertion\0",
-        // "bubble\0",
+        "selection\0",
+        "insertion\0",
+        "bubble\0",
         "shell\0",
         "merge\0",
         "heap\0",
@@ -18,14 +18,14 @@ int main(int argc, char *argv[]) {
     };
     int options_length = sizeof(options) / sizeof(options[0]);
     
-    // array length from 100 to 10000000
+    // array length from 100 to 1000000
     int min_arr_length = 100; 
-    int max_arr_length = 10000000;
+    int max_arr_length = 1000000;
 
+    /* Randomly ordered elements */ 
     print_separator('=', 40);
-    printf("Randomly ordered elements\n");
+    printf("Randomly ordered elements \n");
     print_separator('=', 40);
-    // printf("\n");
     for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
     {
         printf("\n");
@@ -33,19 +33,34 @@ int main(int argc, char *argv[]) {
         printf("Length: %d\n", arr_length);
         print_separator('-', 20);
         random_benchmark(options, options_length, arr_length, time(NULL));
-        // print_separator('-', 20);
+    }
+
+    /* Elements sorted in ascending order */
+    print_separator('=', 40);
+    printf("Elements sorted in ascending order\n");
+    print_separator('=', 40);
+    int max_step = 10; // ascending
+    for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    {
+        printf("\n");
+        print_separator('-', 20);
+        printf("Length: %d\n", arr_length);
+        print_separator('-', 20);
+        monotonic_benchmark(options, options_length, arr_length, max_step);
+    }
+
+    /* Elements sorted in descending order */
+    print_separator('=', 40);
+    printf("Elements sorted in descending order\n");
+    print_separator('=', 40);
+    max_step = -10; // descending
+    for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    {
+        printf("\n");
+        print_separator('-', 20);
+        printf("Length: %d\n", arr_length);
+        print_separator('-', 20);
+        monotonic_benchmark(options, options_length, arr_length, max_step);
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
