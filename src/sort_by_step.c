@@ -5,49 +5,74 @@
 #include <stdint.h>
 
 #include "base.h"
-#include "swap_list.h"
 #include "sorting.h"
-#include "record.h"
+#include "sort_by_step.h"
 
-SwapNode *record_selection_sort(i32 *arr, i32 length, SwapNode *node)
+i32 selection_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 {
-    i32 min_idx;
-    for (i32 i = 0; i < length - 1; i++)
+    if (sort_data->i >= sort_data->length - 1) 
     {
-        min_idx = i;
-        for (i32 j = i + 1; j < length; j++)
-        {
-            if (arr[j] < arr[min_idx])
-            {
-                min_idx = j;
-            }
-        }
-        if (min_idx != i)
-        {
-            SWAP(i32, arr + i, arr + min_idx);
-            node = swap_list_push(node, i, min_idx);
-        }
+        sort_data->i = 0;
+        sort_data->j = 0;
+        sort_data->key = 0;
+        return 1;
     }
-    return node;
+
+    while (sort_data->j < sort_data->length)
+    {
+        if (arr[indices[sort_data->j]] < arr[indices[sort_data->key]])
+        {
+            sort_data->key = sort_data->j;
+        }
+        sort_data->j++;
+    }
+
+    if (sort_data->key != sort_data->i)
+    {
+        SWAP(i32, indices + sort_data->i, indices + sort_data->key);
+    }
+
+    sort_data->i++;
+    sort_data->key = sort_data->i;
+    sort_data->j = sort_data->i + 1;
+    return 0;
 }
 
-SwapNode *record_insertion_sort(i32 *arr, i32 length, SwapNode *node)
-{
-    i32 key, j;
-    for (i32 i = 1; i <= length; i++) 
+i32 insertion_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
+{   // i = 1
+    if (sort_data->i > sort_data->length)
     {
-        key = arr[i];
-        j = i - 1 ;
-        while (j >= 0 && arr[j] > key) 
-        {
-            arr[j+1] = arr[j];
-            node = swap_list_push(node, j, j + 1);
-            j = j - 1;
-        }
-        node = swap_list_push(node, i, j + 1);
-        arr[j+1] = key;
+        sort_data->i = 0;
+        sort_data->j = 0;
+        sort_data->key = 0;
+        return 1;
     }
-    return node;
+
+    sort_data->key = indices[sort_data->i];
+    sort_data->j = sort_data->i - 1;
+
+    while (sort_data->j >= 0 && arr[indices[sort_data->j]] > arr[sort_data->key])
+    {
+        indices[sort_data->j + 1] = indices[sort_data->j];
+        sort_data->j -= 1;
+    }
+
+    // i32 key, j;
+    // for (i32 i = 1; i <= length; i++) 
+    // {
+    //     key = arr[i];
+    //     j = i - 1 ;
+    //     while (j >= 0 && arr[j] > key) 
+    //     {
+    //         arr[j+1] = arr[j];
+    //         j = j - 1;
+    //     }
+    //     arr[j+1] = key;
+    // }
+
+    indices[sort_data->j + 1] = sort_data->key;
+    sort_data->i++;
+    return 0;
 }
 //
 // void bubble_sort(i32 *arr, i32 length)

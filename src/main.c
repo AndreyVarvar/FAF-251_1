@@ -6,13 +6,13 @@
 
 #include "../include/benchmark.h"
 #include "../include/utils.h"
-#include "base.h"
+#include "sorting.h"
 
-#include "../include/sorting.h"
+#include "base.h"
 #include "visualize.h"
-#include "swap_list.h"
-#include "record.h"
+#include "sort_by_step.h"
 #include "draw.h"
+#include "misc.h"
 
 void print_help(char *program_name);
 
@@ -195,21 +195,18 @@ int main(int argc, char *argv[])
         printf("No sorts selected.\n");
         return 0;
     }
+
+    i32 size = 1000;
+    i32 *arr = malloc(size * sizeof(i32));
+
+    for (i32 i = 0; i < size; i++)
+    {
+        i32 sign = (rand() % 2 == 1) ? 1 : -1;
+        arr[i] = (sign) * rand();
+    }
+
+    run(arr, size);
+
+    free(arr);
 }
 
-void print_help(char *program_name)
-{
-    printf("Usage: %s [options] source_file output_file.\n", program_name);
-    printf("\t-s\tUse Selection sort.\n");
-    printf("\t-i\tUse Insertion sort.\n");
-    printf("\t-b\tUse Bubble sort.\n");
-    printf("\t-sh\tUse Shell sort.\n");
-    printf("\t-m\tUse Merge sort.\n");
-    printf("\t-h\tUse Heap sort.\n");
-    printf("\t-t\tUse Time sort.\n");
-    printf("\t-st\tUse Stalin sort.\n");
-    printf("\t-q\tUse Quick sort.\n");
-    printf("\t-g\tVisualize the sorting process.\n");
-    printf("\t-o\tPlace output into <file>.\n");
-    printf("\t--help\tDisplay useful info.\n");
-}
