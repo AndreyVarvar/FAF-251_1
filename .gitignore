@@ -56,3 +56,5 @@ dkms.conf
 
 main
 a.out
+benchmark_results.csv
+.~lock.benchmark_results.csv#

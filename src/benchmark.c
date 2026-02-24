@@ -5,8 +5,9 @@
 
 #include "benchmark.h"
 #include "sorts.h"
+#include "utils.h"
 
-void random_benchmark(char **options, int options_length, int arr_length, time_t seed)
+void random_benchmark(char **options, int options_length, int arr_length, time_t seed, FILE *csv_out)
 {
     srand(seed);
 
@@ -23,7 +24,7 @@ void random_benchmark(char **options, int options_length, int arr_length, time_t
         int *copy_arr = malloc(arr_length * sizeof *copy_arr);
         memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
 
-        copy_arr = benchmark(options[i], copy_arr, arr_length);
+        copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, "Random");
 
         free(copy_arr);
     }
@@ -31,18 +32,19 @@ void random_benchmark(char **options, int options_length, int arr_length, time_t
     free(arr);
 }
 
-void monotonic_benchmark(char **options, int options_length, int arr_length, int max_step)
+void monotonic_benchmark(char **options, int options_length, int arr_length, int max_step, FILE *csv_out)
 {
     int *arr = malloc(arr_length * sizeof *arr);
-
     generate_monotonic_random_steps(arr, arr_length, max_step);
+
+    const char *mode = (max_step > 0) ? "Ascending" : "Descending";
 
     for (int i = 0; i < options_length; ++i)
     {
         int *copy_arr = malloc(arr_length * sizeof *copy_arr);
         memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
 
-        copy_arr = benchmark(options[i], copy_arr, arr_length);
+        copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, mode);
 
         free(copy_arr);
     }
@@ -50,9 +52,15 @@ void monotonic_benchmark(char **options, int options_length, int arr_length, int
     free(arr);
 }
 
-int *benchmark(char *option, int *arr, int length)
+int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mode)
 {
-    printf("Started %s sort.\n", option);
+    // Console output
+    printf("Started %s sort (%s).\n", option, mode);
+    fflush(stdout);
+
+    // CSV log
+    if (csv_out)
+        fprintf(csv_out, "%s,%s,%d,", mode, option, length);
 
     clock_t start = clock();
 
@@ -79,6 +87,8 @@ int *benchmark(char *option, int *arr, int length)
 
     clock_t end = clock();
 
+    double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+
     int check = 1;
     for (int i = 1; i < length; i++)
     {
@@ -89,10 +99,15 @@ int *benchmark(char *option, int *arr, int length)
         }
     }
 
+    // Console output
     printf("%s sort %s.\nTime: %lf\n\n",
            option,
            check ? "successful" : "unsuccessful",
-           (double)(end - start) / CLOCKS_PER_SEC);
+           elapsed);
+
+    // CSV output
+    if (csv_out)
+        fprintf(csv_out, "%lf,%d\n", elapsed, check);
 
     return arr;
 }

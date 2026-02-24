@@ -1,9 +1,23 @@
 #include "sorts.h"
 #include "utils.h"
 
+static int median_of_three_index(int *a, int low, int mid, int high)
+{
+    if ((a[low] <= a[mid] && a[mid] <= a[high]) || (a[high] <= a[mid] && a[mid] <= a[low]))
+        return mid;
+    if ((a[mid] <= a[low] && a[low] <= a[high]) || (a[high] <= a[low] && a[low] <= a[mid]))
+        return low;
+    return high;
+}
 
 static int partition(int *a, int low, int high)
 {
+    int mid = low + (high - low) / 2;
+    int pivot_index = median_of_three_index(a, low, mid, high);
+
+    // Move pivot to start
+    swap(&a[low], &a[pivot_index]);
+
     int p = a[low];
     int i = low;
     int j = high;
