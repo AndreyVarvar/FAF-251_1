@@ -42,7 +42,7 @@ void run(i32 *arr, i32 length)
     SDL_SetTextureScaleMode(display, SDL_SCALEMODE_NEAREST);
 
     SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
-    SortData sort_data = {-1, -1, -1, -1, -1, length, -1, -1, -1, -1, -1, NULL};
+    SortData sort_data = {-1, -1, -1, -1, length, NULL};
     i32 *indices = malloc(length * sizeof(i32));
 
     for (i32 i = 0; i < length; i++)

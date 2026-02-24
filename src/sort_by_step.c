@@ -149,59 +149,66 @@ i32 shell_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
     return 0;
 }
 
-void merge(i32 *arr, i32 left, i32 mid, i32 right) {
-
-    i32 n1 = mid - left + 1;
-    i32 n2 = right - mid;
-
-    i32 *arr1[n1], *arr2[n2];
-
-    for (i32 i = 0; i < n1; i++)
-        arr1[i] = arr[left + i];
-    for (i32 j = 0; j < n2; j++)
-        arr2[j] = arr[mid + 1 + j];
-
-    i32 i = 0;
-    i32 j = 0;
+static void merge(i32 *arr, i32 *indices, i32 *tmp, i32 left, i32 mid, i32 right)
+{
+    i32 i = left;
+    i32 j = mid + 1;
     i32 k = left;
 
-    while (i < n1 && j < n2) {
-        if (arr1[i] <= arr2[j]) {
-            arr[k] = arr1[i];
-            i++;
-        } else {
-            arr[k] = arr2[j];
-            j++;
+    for (i32 x = left; x <= right; x++)
+    {
+        tmp[x] = indices[x];
+    }
+
+    while (i <= mid && j <= right)
+    {
+        if (arr[tmp[i]] <= arr[tmp[j]])
+        {
+            indices[k++] = tmp[i++];
         }
-        k++;
+        else
+        {
+            indices[k++] = tmp[j++];
+        }
     }
 
-    while (i < n1) {
-        arr[k] = arr1[i];
-        i++;
-        k++;
-    }
-
-    // Copy remaining elements of arr2[] if any
-    while (j < n2) {
-        arr[k] = arr2[j];
-        j++;
-        k++;
+    while (i <= mid)
+    {
+        indices[k++] = tmp[i++];
     }
 }
 
 i32 merge_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
-    i32 n = sort_data->length;
-
-    for (i32 currSize = 1; currSize <= n-1; currSize = 2*currSize)
+{
+    if (sort_data->temp == NULL)
     {
-        for (i32 leftStart = 0; leftStart < n-1; leftStart += 2*currSize)
-        {
-            i32 mid = min(leftStart + currSize - 1, n-1);
-            i32 rightEnd = min(leftStart + 2*currSize - 1, n-1);
-            merge(arr, leftStart, mid, rightEnd);
-        }
+        sort_data->i = 1;
+        sort_data->j = 0;
+        sort_data->temp = malloc(sort_data->length * sizeof(i32));
     }
+
+    if (sort_data->i > sort_data->length - 1)
+    {
+        sort_data->i = -1;
+        sort_data->j = -1;
+        free(sort_data->temp);
+        sort_data->temp = NULL;
+        return 1;
+    }
+
+    if (sort_data->j < sort_data->length - 1)
+    {
+        i32 mid = min(sort_data->j + sort_data->i - 1, sort_data->length-1);
+        i32 rightEnd = min(sort_data->j + 2*sort_data->i - 1, sort_data->length-1);
+        merge(arr, indices, sort_data->temp, sort_data->j, mid, rightEnd);
+        sort_data->j += 2 * sort_data->i;
+    } else
+    {
+        sort_data->j = 0;
+        sort_data->i *= 2;
+    }
+
+    return 0;
 }
 //
 // void heapify(i32 *arr, i32 length, i32 i)
