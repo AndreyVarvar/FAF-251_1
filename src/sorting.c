@@ -45,7 +45,7 @@ void insertion_sort(i32 *arr, i32 length)
 
 void bubble_sort(i32 *arr, i32 length)
 {
-    i32 swapped, temp;
+    i32 swapped;
     for (i32 i = 0; i < length-1; i++)
     {
         swapped = 0;

@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    i32 size = 1000;
+    i32 size = 10000;
     i32 *arr = malloc(size * sizeof(i32));
 
     for (i32 i = 0; i < size; i++)

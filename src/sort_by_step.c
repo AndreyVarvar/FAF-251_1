@@ -14,26 +14,26 @@ i32 selection_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
     {
         sort_data->i = 0;
         sort_data->j = 0;
-        sort_data->key = 0;
+        sort_data->misc = 0;
         return 1;
     }
 
     while (sort_data->j < sort_data->length)
     {
-        if (arr[indices[sort_data->j]] < arr[indices[sort_data->key]])
+        if (arr[indices[sort_data->j]] < arr[indices[sort_data->misc]])
         {
-            sort_data->key = sort_data->j;
+            sort_data->misc = sort_data->j;
         }
         sort_data->j++;
     }
 
-    if (sort_data->key != sort_data->i)
+    if (sort_data->misc != sort_data->i)
     {
-        SWAP(i32, indices + sort_data->i, indices + sort_data->key);
+        SWAP(i32, indices + sort_data->i, indices + sort_data->misc);
     }
 
     sort_data->i++;
-    sort_data->key = sort_data->i;
+    sort_data->misc = sort_data->i;
     sort_data->j = sort_data->i + 1;
     return 0;
 }
@@ -44,77 +44,86 @@ i32 insertion_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
     {
         sort_data->i = 0;
         sort_data->j = 0;
-        sort_data->key = 0;
+        sort_data->misc = 0;
         return 1;
     }
 
-    sort_data->key = indices[sort_data->i];
+    sort_data->misc = indices[sort_data->i];
     sort_data->j = sort_data->i - 1;
 
-    while (sort_data->j >= 0 && arr[indices[sort_data->j]] > arr[sort_data->key])
+    while (sort_data->j >= 0 && arr[indices[sort_data->j]] > arr[sort_data->misc])
     {
         indices[sort_data->j + 1] = indices[sort_data->j];
         sort_data->j -= 1;
     }
 
-    // i32 key, j;
-    // for (i32 i = 1; i <= length; i++) 
-    // {
-    //     key = arr[i];
-    //     j = i - 1 ;
-    //     while (j >= 0 && arr[j] > key) 
-    //     {
-    //         arr[j+1] = arr[j];
-    //         j = j - 1;
-    //     }
-    //     arr[j+1] = key;
-    // }
-
-    indices[sort_data->j + 1] = sort_data->key;
+    indices[sort_data->j + 1] = sort_data->misc;
     sort_data->i++;
     return 0;
 }
-//
-// void bubble_sort(i32 *arr, i32 length)
-// {
-//     i32 swapped, temp;
-//     for (i32 i = 0; i < length-1; i++)
-//     {
-//         swapped = 0;
-//         for (i32 j = 0; j < length-i-1; j++)
-//         {
-//             if (arr[j] > arr[j+1])
-//             {
-//                 swap(arr + j, arr + j + 1);
-//                 swapped = 1;
-//             }
-//         }
-//         if (!swapped)
-//         {
-//             break;
-//         }
-//     }
-// }
-//
-// void shell_sort(i32 *arr, i32 length)
-// {
-//     i32 temp, j;
-//     for (i32 gap = length / 2; gap > 0; gap /= 2)
-//     {
-//         for (i32 i = gap; i < length; i++)
-//         {
-//             temp = arr[i];
-//             j = i;
-//             while (j >= gap && arr[j - gap] > temp)
-//             {
-//                 arr[j] = arr[j - gap];
-//                 j -= gap;
-//             }
-//             arr[j] = temp;
-//         }
-//     }
-// }
-//
+
+i32 bubble_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
+{
+    if (sort_data->i >= sort_data->length - 1)
+    {
+        sort_data->i = 0;
+        sort_data->j = 0;
+        sort_data->misc = 0;
+        return 1;
+    }
+
+    sort_data->misc = 0;
+    sort_data->j = 0;
+
+    while (sort_data->j < sort_data->length - sort_data->i - 1)
+    {
+        if (arr[indices[sort_data->j]] > arr[indices[sort_data->j + 1]])
+        {
+            SWAP(i32, indices + sort_data->j, indices + sort_data->j + 1);
+            sort_data->misc = 1;
+        }
+        sort_data->j++;
+    }
+
+    if (!sort_data->misc)
+    {
+        sort_data->i = sort_data->length - 1;
+    }
+
+    sort_data->i++;
+    return 0;
+}
+
+i32 shell_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
+{
+
+    sort_data->misc = indices[sort_data->i];
+    sort_data->j = sort_data->i;
+    while (sort_data->j >= sort_data->gap && arr[indices[sort_data->j - sort_data->gap]] > sort_data->misc)
+    {
+        arr[indices[sort_data->j]] = arr[indices[sort_data->j - sort_data->gap]];
+        sort_data->j -= sort_data->gap;
+    }
+    indice[sort_data->j] = temp;
+    return 0;
+
+    i32 temp, j;
+    for (i32 gap = length / 2; gap > 0; gap /= 2)
+    {
+        for (i32 i = gap; i < length; i++)
+        {
+            temp = arr[i];
+            j = i;
+            while (j >= gap && arr[j - gap] > temp)
+            {
+                arr[j] = arr[j - gap];
+                j -= gap;
+            }
+            arr[j] = temp;
+        }
+    }
+}
+
 // void merge(i32 *arr, i32 *temp, i32 left, i32 mid, i32 right)
 // {
 //     i32 i = left;

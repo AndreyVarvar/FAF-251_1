@@ -44,7 +44,7 @@ void run(i32 *arr, i32 length)
     SDL_SetTextureScaleMode(display, SDL_SCALEMODE_NEAREST);
 
     SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
-    SortData sort_data = {1, 0, length, 0};
+    SortData sort_data = {0, 0, 0, length / 2, length};
     i32 *indices = malloc(length * sizeof(i32));
 
     for (i32 i = 0; i < length; i++)
@@ -58,10 +58,7 @@ void run(i32 *arr, i32 length)
         alt_indices[i] = i;
     }
 
-    while (!insertion_sort_step(arr, alt_indices, &sort_data)) {}
-    sort_data.i = 0;
-    sort_data.j = 0;
-    sort_data.key = 0;
+    while (!bubble_sort_step(arr, alt_indices, &sort_data)) {}
 
     SDL_Color *color_array = generate_gradient_array(alt_indices, array_width, array_height);
 
@@ -83,7 +80,7 @@ void run(i32 *arr, i32 length)
         while (dt_accumulator > 0)
         {
             dt_accumulator = 0;
-            insertion_sort_step(arr, indices, &sort_data);
+            bubble_sort_step(arr, indices, &sort_data);
             render_array(renderer, array_texture, indices, color_array, array_width, array_height);
         }
 
