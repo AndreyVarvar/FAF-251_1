@@ -5,15 +5,16 @@
 
 int main(int argc, char *argv[]) {
     char *options[] = {
-        "selection\0",
-        "insertion\0",
-        "bubble\0",
+        // "selection\0",
+        // "insertion\0",
+        // "bubble\0",
         "shell\0",
         "merge\0",
         "heap\0",
         "tim\0",
-        "stalin\0",
-        "quick\0"
+        "quick\0",
+        "radix\0",
+        "stalin\0"
         //add if new sorts
     };
     int options_length = sizeof(options) / sizeof(options[0]);
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
         monotonic_benchmark(options, options_length, arr_length, max_step);
     }
 
-    /* Elements sorted in descending order */
+    // /* Elements sorted in descending order */
     print_separator('=', 40);
     printf("Elements sorted in descending order\n");
     print_separator('=', 40);

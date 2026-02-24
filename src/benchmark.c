@@ -70,10 +70,12 @@ int *benchmark(char *option, int *arr, int length)
         heap_sort(arr, length);
     else if (strcmp("tim", option) == 0)
         tim_sort(arr, length);
-    else if (strcmp("stalin", option) == 0)
-        arr = cruel_stalin_sort(arr, &length);
     else if (strcmp("quick", option) == 0)
         quick_sort(arr, length);
+    else if (strcmp("radix", option) == 0)
+        radix_sort(arr, length);
+    else if (strcmp("stalin", option) == 0)
+        arr = cruel_stalin_sort(arr, &length);
 
     clock_t end = clock();
 
