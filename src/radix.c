@@ -3,17 +3,17 @@
 #include <stdint.h>
 
 
-void radix_sort(int *restrict arr, int n)
+void radix_sort(int *restrict arr, int length)
 {
-    if (n <= 1)
+    if (length <= 1)
         return;
 
-    int *tmp = aligned_alloc(64, n * sizeof(int));
+    int *tmp = aligned_alloc(64, length * sizeof(int));
     if (!tmp)
         return;
 
     // Flip sign bit to handle signed ints
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < length; i++)
         arr[i] ^= 0x80000000;
 
     int *in  = arr;
@@ -55,10 +55,10 @@ void radix_sort(int *restrict arr, int n)
 
     // If final data is in tmp, copy back once
     if (in != arr)
-        memcpy(arr, in, n * sizeof(int));
+        memcpy(arr, in, length * sizeof(int));
 
     // Restore sign bit
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < length; i++)
         arr[i] ^= 0x80000000;
 
     free(tmp);
