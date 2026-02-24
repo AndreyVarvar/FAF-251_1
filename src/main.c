@@ -31,7 +31,7 @@ int main(void) {
 
     // CSV header
     fprintf(csv_out, "Mode,Sort,ArrayLength,TimeSeconds,Success\n");
-    
+
     /* Randomly ordered elements */ 
     print_separator('=', 40);
     printf("Randomly ordered elements \n");

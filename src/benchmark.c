@@ -117,12 +117,28 @@ void generate_monotonic_random_steps(int *arr, int length, int max_step)
     if (length <= 0)
         return;
 
-    int current = -(length / 2) * max_step;
+    int current = 0;
     arr[0] = current;
 
-    for (int i = 1; i < length; i++)
+    if (max_step > 0)
     {
-        current += 1 + rand() % max_step;
-        arr[i] = current;
+        // Ascending
+        for (int i = 1; i < length; i++)
+        {
+            int s = 1 + rand() % max_step;
+            current += s;
+            arr[i] = current;
+        }
+    }
+    else
+    {
+        // Descending
+        max_step = -max_step;  // make positive for rand()
+        for (int i = 1; i < length; i++)
+        {
+            int s = 1 + rand() % max_step;
+            current -= s;
+            arr[i] = current;
+        }
     }
 }

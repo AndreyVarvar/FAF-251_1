@@ -28,7 +28,7 @@ void radix_sort(int *restrict arr, int length)
         int shift = pass * 8;
 
         // Count digits
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < length; i++)
             count[(in[i] >> shift) & 0xFF]++;
 
         // Prefix sum
@@ -41,7 +41,7 @@ void radix_sort(int *restrict arr, int length)
         }
 
         // Stable scatter
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < length; i++)
         {
             int d = (in[i] >> shift) & 0xFF;
             out[count[d]++] = in[i];
