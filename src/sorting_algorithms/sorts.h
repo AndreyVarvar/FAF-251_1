@@ -9,7 +9,7 @@ void merge_sort(int *arr, int length);
 void heap_sort(int *arr, int length);
 void quick_sort(int *arr, int length);
 void tim_sort(int *arr, int length);
-void radix_sort(int *restrict arr, int length);
+void radix_sort(int *arr, int length);
 void kind_stalin_sort(int *arr, int length);
 int *cruel_stalin_sort(int *arr, int *length);
 

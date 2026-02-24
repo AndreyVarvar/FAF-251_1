@@ -1,13 +1,11 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <SDL3/SDL.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "base.h"
 #include "visualize.h"
 #include "sort_by_step.h"
-#include "sorting.h"
 #include "draw.h"
 #include "misc.h"
 
@@ -44,7 +42,7 @@ void run(i32 *arr, i32 length)
     SDL_SetTextureScaleMode(display, SDL_SCALEMODE_NEAREST);
 
     SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
-    SortData sort_data = {0, 0, 0, length / 2, length};
+    SortData sort_data = {-1, -1, -1, -1, -1, length, -1, -1, -1, -1, -1, NULL};
     i32 *indices = malloc(length * sizeof(i32));
 
     for (i32 i = 0; i < length; i++)
@@ -58,7 +56,7 @@ void run(i32 *arr, i32 length)
         alt_indices[i] = i;
     }
 
-    while (!bubble_sort_step(arr, alt_indices, &sort_data)) {}
+    while (!merge_sort_step(arr, alt_indices, &sort_data)) {}
 
     SDL_Color *color_array = generate_gradient_array(alt_indices, array_width, array_height);
 
@@ -80,7 +78,7 @@ void run(i32 *arr, i32 length)
         while (dt_accumulator > 0)
         {
             dt_accumulator = 0;
-            bubble_sort_step(arr, indices, &sort_data);
+            merge_sort_step(arr, indices, &sort_data);
             render_array(renderer, array_texture, indices, color_array, array_width, array_height);
         }
 

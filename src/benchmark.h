@@ -1,6 +1,7 @@
 #ifndef BENCHMARK_H
 #define BENCHMARK_H
 
+#include <stdio.h>
 #include <time.h>
 
 void random_benchmark(char **options, int options_length, int arr_length, time_t seed, FILE *csv_out);

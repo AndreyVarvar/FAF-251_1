@@ -1,5 +1,6 @@
 #include "sorts.h"
-#include "utils.h"
+#include "../utils.h"
+#include "../base.h"
 
 static int median_of_three_index(int *a, int low, int mid, int high)
 {
@@ -16,7 +17,7 @@ static int partition(int *a, int low, int high)
     int pivot_index = median_of_three_index(a, low, mid, high);
     int pivot = a[pivot_index];
 
-    swap(&a[low], &a[pivot_index]);
+    SWAP(i32, &a[low], &a[pivot_index]);
 
     int i = low - 1;
     int j = high + 1;
@@ -29,7 +30,7 @@ static int partition(int *a, int low, int high)
         if (i >= j)
             return j;
 
-        swap(&a[i], &a[j]);
+        SWAP(i32, &a[i], &a[j]);
     }
 }
 

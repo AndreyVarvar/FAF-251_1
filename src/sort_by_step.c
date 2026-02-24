@@ -5,16 +5,22 @@
 #include <stdint.h>
 
 #include "base.h"
-#include "sorting.h"
+#include "utils.h"
 #include "sort_by_step.h"
 
 i32 selection_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 {
-    if (sort_data->i >= sort_data->length - 1) 
-    {
+    if (sort_data->misc < 0) {
+        sort_data->misc = 0;
         sort_data->i = 0;
         sort_data->j = 0;
-        sort_data->misc = 0;
+    }
+
+    if (sort_data->i >= sort_data->length - 1) 
+    {
+        sort_data->misc = -1;
+        sort_data->i = -1;
+        sort_data->j = -1;
         return 1;
     }
 
@@ -39,12 +45,18 @@ i32 selection_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 }
 
 i32 insertion_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
-{   // i = 1
+{
+    if (sort_data->misc < 0) {
+        sort_data->misc = 0;
+        sort_data->i = 1;
+        sort_data->j = 0;
+    }
+
     if (sort_data->i > sort_data->length)
     {
-        sort_data->i = 0;
-        sort_data->j = 0;
-        sort_data->misc = 0;
+        sort_data->misc = -1;
+        sort_data->i = -1;
+        sort_data->j = -1;
         return 1;
     }
 
@@ -64,11 +76,17 @@ i32 insertion_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 
 i32 bubble_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 {
-    if (sort_data->i >= sort_data->length - 1)
-    {
+    if (sort_data->misc < 0) {
+        sort_data->misc = 0;
         sort_data->i = 0;
         sort_data->j = 0;
-        sort_data->misc = 0;
+    }
+
+    if (sort_data->i >= sort_data->length - 1)
+    {
+        sort_data->misc = -1;
+        sort_data->i = -1;
+        sort_data->j = -1;
         return 1;
     }
 
@@ -96,83 +114,95 @@ i32 bubble_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 
 i32 shell_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
 {
-
-    sort_data->misc = indices[sort_data->i];
-    sort_data->j = sort_data->i;
-    while (sort_data->j >= sort_data->gap && arr[indices[sort_data->j - sort_data->gap]] > sort_data->misc)
-    {
-        arr[indices[sort_data->j]] = arr[indices[sort_data->j - sort_data->gap]];
-        sort_data->j -= sort_data->gap;
+    if (sort_data->gap < 0) {
+        sort_data->gap = sort_data->length/2;
+        sort_data->misc = 0;
+        sort_data->i = sort_data->gap;
+        sort_data->j = 2;
     }
-    indice[sort_data->j] = temp;
-    return 0;
 
-    i32 temp, j;
-    for (i32 gap = length / 2; gap > 0; gap /= 2)
+    if (sort_data->gap == 0) {
+        sort_data->gap = -1;
+        sort_data->misc = -1;
+        sort_data->i = -1;
+        sort_data->j = -1;
+        return 1;
+    }
+
+    if (sort_data->i < sort_data->length)
     {
-        for (i32 i = gap; i < length; i++)
+        sort_data->misc = indices[sort_data->i];
+        sort_data->j = sort_data->i;
+        while (sort_data->j >= sort_data->gap && arr[indices[sort_data->j - sort_data->gap]] > arr[sort_data->misc])
         {
-            temp = arr[i];
-            j = i;
-            while (j >= gap && arr[j - gap] > temp)
-            {
-                arr[j] = arr[j - gap];
-                j -= gap;
-            }
-            arr[j] = temp;
+            indices[sort_data->j] = indices[sort_data->j - sort_data->gap];
+            sort_data->j -= sort_data->gap;
         }
+        indices[sort_data->j] = sort_data->misc;
+        sort_data->i++;
+    } else
+    {
+        sort_data->gap /= 2;
+        sort_data->i = sort_data->gap;
+    }
+
+    return 0;
+}
+
+void merge(i32 *arr, i32 left, i32 mid, i32 right) {
+
+    i32 n1 = mid - left + 1;
+    i32 n2 = right - mid;
+
+    i32 *arr1[n1], *arr2[n2];
+
+    for (i32 i = 0; i < n1; i++)
+        arr1[i] = arr[left + i];
+    for (i32 j = 0; j < n2; j++)
+        arr2[j] = arr[mid + 1 + j];
+
+    i32 i = 0;
+    i32 j = 0;
+    i32 k = left;
+
+    while (i < n1 && j < n2) {
+        if (arr1[i] <= arr2[j]) {
+            arr[k] = arr1[i];
+            i++;
+        } else {
+            arr[k] = arr2[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = arr1[i];
+        i++;
+        k++;
+    }
+
+    // Copy remaining elements of arr2[] if any
+    while (j < n2) {
+        arr[k] = arr2[j];
+        j++;
+        k++;
     }
 }
 
-// void merge(i32 *arr, i32 *temp, i32 left, i32 mid, i32 right)
-// {
-//     i32 i = left;
-//     i32 j = mid + 1;
-//     i32 k = left;
-//     i32 n1 = mid - left + 1;
-//     i32 n2 = right - mid;
-//
-//     for (i32 x = left; x <= right; x++)
-//     {
-//         temp[x] = arr[x];
-//     }
-//
-//     while (i <= mid && j <= right)
-//     {
-//         if (temp[i] <= temp[j])
-//         {
-//             arr[k++] = temp[i++];
-//         }
-//         else
-//         {
-//             arr[k++] = temp[j++];
-//         }
-//     }
-//
-//     while (i <= mid)
-//     {
-//         arr[k++] = temp[i++];
-//     }
-// }
-//
-// void merge_sort_rec(i32 *arr, i32 *temp, i32 left, i32 right)
-// {
-//     if (left < right) {
-//         i32 mid = left + (right - left) / 2;
-//
-//         merge_sort_rec(arr, temp, left, mid);
-//         merge_sort_rec(arr, temp, mid + 1, right);
-//
-//         merge(arr, temp, left, mid, right);
-//     }
-// }
-//
-// void merge_sort(i32 *arr, i32 length)
-// {
-//     i32 *temp = malloc((length) * sizeof(i32));
-//     merge_sort_rec(arr, temp, 0, length - 1);
-//     free(temp);
-// }
+i32 merge_sort_step(i32 *arr, i32 *indices, SortData *sort_data)
+    i32 n = sort_data->length;
+
+    for (i32 currSize = 1; currSize <= n-1; currSize = 2*currSize)
+    {
+        for (i32 leftStart = 0; leftStart < n-1; leftStart += 2*currSize)
+        {
+            i32 mid = min(leftStart + currSize - 1, n-1);
+            i32 rightEnd = min(leftStart + 2*currSize - 1, n-1);
+            merge(arr, leftStart, mid, rightEnd);
+        }
+    }
+}
 //
 // void heapify(i32 *arr, i32 length, i32 i)
 // {

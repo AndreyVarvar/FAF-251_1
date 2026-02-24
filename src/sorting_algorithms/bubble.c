@@ -1,14 +1,15 @@
 #include "sorts.h"
+#include "../base.h"
 
-void bubble_sort(int *arr, int length) {
-    for (int i = 0; i < length-1; i++)
+void bubble_sort(i32 *arr, i32 length) {
+    for (i32 i = 0; i < length-1; i++)
     {
-        int swapped = 0;
-        for (int j = 0; j < length-i-1; j++)
+        i32 swapped = 0;
+        for (i32 j = 0; j < length-i-1; j++)
         {
             if (arr[j] > arr[j+1])
             {
-                int tmp = arr[j];
+                i32 tmp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = tmp;
                 swapped = 1;
@@ -20,3 +21,4 @@ void bubble_sort(int *arr, int length) {
         }
     }
 }
+

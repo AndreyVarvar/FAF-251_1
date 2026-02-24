@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "benchmark.h"
-#include "sorts.h"
+#include "./sorting_algorithms/sorts.h"
 #include "utils.h"
 
 static inline double now_sec(void)

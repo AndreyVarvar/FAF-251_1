@@ -6,22 +6,6 @@
 #include "base.h"
 #include "misc.h"
 
-void print_help(char *program_name)
-{
-    printf("Usage: %s [options] source_file output_file.\n", program_name);
-    printf("\t-s\tUse Selection sort.\n");
-    printf("\t-i\tUse Insertion sort.\n");
-    printf("\t-b\tUse Bubble sort.\n");
-    printf("\t-sh\tUse Shell sort.\n");
-    printf("\t-m\tUse Merge sort.\n");
-    printf("\t-h\tUse Heap sort.\n");
-    printf("\t-t\tUse Time sort.\n");
-    printf("\t-st\tUse Stalin sort.\n");
-    printf("\t-q\tUse Quick sort.\n");
-    printf("\t-g\tVisualize the sorting process.\n");
-    printf("\t-o\tPlace output into <file>.\n");
-    printf("\t--help\tDisplay useful info.\n");
-}
 
 SDL_Color *generate_gradient_array(i32 *arr, i32 width, i32 height)
 {

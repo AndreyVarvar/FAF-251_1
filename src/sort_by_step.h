@@ -15,5 +15,6 @@ typedef struct SortData
 i32 selection_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 insertion_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 bubble_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
+i32 shell_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 
 #endif

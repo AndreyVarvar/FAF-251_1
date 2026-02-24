@@ -1,12 +1,9 @@
-#include <SDL3/SDL_pixels.h>
-#include <SDL3/SDL_render.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 
 #include "base.h"
 #include "draw.h"
-#include "sorting.h"
 
 void clear_texture(SDL_Renderer *renderer, SDL_Texture *target)
 {
