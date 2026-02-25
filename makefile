@@ -1,6 +1,6 @@
 CC := gcc
 LIBS := -lSDL3 -lm
-# CFLAGS := -Wall -Wextra -O3 -march=native -funroll-loops
+CFLAGS := -Wall -Wextra -O3 -march=native -funroll-loops
 BIN_NAME := main
 
 
