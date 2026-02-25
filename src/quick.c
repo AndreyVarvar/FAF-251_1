@@ -14,41 +14,32 @@ static int partition(int *a, int low, int high)
 {
     int mid = low + (high - low) / 2;
     int pivot_index = median_of_three_index(a, low, mid, high);
+    int pivot = a[pivot_index];
 
-    // Move pivot to start
     swap(&a[low], &a[pivot_index]);
 
-    int p = a[low];
-    int i = low;
-    int j = high;
+    int i = low - 1;
+    int j = high + 1;
 
-    while(i < j)
+    while (1)
     {
+        do { i++; } while (a[i] < pivot);
+        do { j--; } while (a[j] > pivot);
 
-        while(a[i] <= p && i <= high - 1)
-        {
-            i++;
-        }
-        while(a[j] > p && j >= low + 1)
-        {
-            j--;
-        }
-        if(i < j)
-        {
-            swap(&a[i], &a[j]);
-        }
+        if (i >= j)
+            return j;
+
+        swap(&a[i], &a[j]);
     }
-    swap(&a[low], &a[j]);
-    return j;
 }
 
 static void quick_sort_rec(int *a, int low, int high)
 {
-    if(low < high)
+    if (low < high)
     {
-        int cut = partition(a, low, high);
-        quick_sort_rec(a, low, cut - 1);
-        quick_sort_rec(a, cut + 1, high);
+        int p = partition(a, low, high);
+        quick_sort_rec(a, low, p);
+        quick_sort_rec(a, p + 1, high);
     }
 }
 
