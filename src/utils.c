@@ -1,25 +1,18 @@
-#include "utils.h"
 #include <stdio.h>
 
-void swap(int *a, int *b)
-{
-    int t = *a;
-    *a = *b;
-    *b = t;
-}
+#include "base.h"
+#include "utils.h"
 
-void reverse(int *arr, int start, int end)
+void reverse(i32 *arr, i32 start, i32 end)
 {
-    for (int i = 0; i < (end - start) / 2; i++) {
-        int t = arr[start + i];
-        arr[start + i] = arr[end - 1 - i];
-        arr[end - 1 - i] = t;
+    for (i32 i = 0; i < (end - start) / 2; i++) {
+        SWAP(i32, arr + start + i, arr + end - 1 - i);
     }
 }
 
-void print_int_arr(int *arr, int length) {
+void print_i32_arr(i32 *arr, i32 length) {
     printf("{");
-    for (int i = 0; i < length; i++) {
+    for (i32 i = 0; i < length; i++) {
         printf("%d", arr[i]);
 
         if (i != length-1) {
@@ -29,9 +22,9 @@ void print_int_arr(int *arr, int length) {
     printf("}\n");
 }
 
-void print_separator(char c, int width)
+void print_separator(char c, i32 width)
 {
-    for (int i = 0; i < width; i++)
+    for (i32 i = 0; i < width; i++)
         putchar(c);
     putchar('\n');
 }

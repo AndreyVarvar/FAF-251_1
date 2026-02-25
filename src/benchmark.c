@@ -6,6 +6,7 @@
 #include "benchmark.h"
 #include "./sorting_algorithms/sorts.h"
 #include "utils.h"
+#include "base.h"
 
 static inline double now_sec(void)
 {
@@ -14,21 +15,21 @@ static inline double now_sec(void)
     return ts.tv_sec + ts.tv_nsec * 1e-9;
 }
 
-void random_benchmark(char **options, int options_length, int arr_length, time_t seed, FILE *csv_out)
+void random_benchmark(char **options, i32 options_length, i32 arr_length, time_t seed, FILE *csv_out)
 {
     srand(seed);
 
-    int *arr = malloc(arr_length * sizeof *arr);
+    i32 *arr = malloc(arr_length * sizeof *arr);
 
-    for (int i = 0; i < arr_length; i++)
+    for (i32 i = 0; i < arr_length; i++)
     {
-        int sign = (rand() % 2) ? 1 : -1;
+        i32 sign = (rand() % 2) ? 1 : -1;
         arr[i] = sign * rand();
     }
 
-    for (int i = 0; i < options_length; ++i)
+    for (i32 i = 0; i < options_length; ++i)
     {
-        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        i32 *copy_arr = malloc(arr_length * sizeof *copy_arr);
         memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
 
         copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, "Random");
@@ -39,16 +40,16 @@ void random_benchmark(char **options, int options_length, int arr_length, time_t
     free(arr);
 }
 
-void monotonic_benchmark(char **options, int options_length, int arr_length, int max_step, FILE *csv_out)
+void monotonic_benchmark(char **options, i32 options_length, i32 arr_length, i32 max_step, FILE *csv_out)
 {
-    int *arr = malloc(arr_length * sizeof *arr);
+    i32 *arr = malloc(arr_length * sizeof *arr);
     generate_monotonic_random_steps(arr, arr_length, max_step);
 
     const char *mode = (max_step > 0) ? "Ascending" : "Descending";
 
-    for (int i = 0; i < options_length; ++i)
+    for (i32 i = 0; i < options_length; ++i)
     {
-        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        i32 *copy_arr = malloc(arr_length * sizeof *copy_arr);
         memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
 
         copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, mode);
@@ -59,24 +60,24 @@ void monotonic_benchmark(char **options, int options_length, int arr_length, int
     free(arr);
 }
 
-void partially_sorted_benchmark(char **options, int options_length, int arr_length, int max_step, int max_displacement, FILE *csv_out)
+void partially_sorted_benchmark(char **options, i32 options_length, i32 arr_length, i32 max_step, i32 max_displacement, FILE *csv_out)
 {
-    int *arr = malloc(arr_length * sizeof *arr);
+    i32 *arr = malloc(arr_length * sizeof *arr);
     generate_monotonic_random_steps(arr, arr_length, max_step);
-    
+
     // Each element moves at most max_displacement positions
-    for (int i = 0; i < arr_length; i++)
+    for (i32 i = 0; i < arr_length; i++)
     {
-        int j = i + (rand() % (2 * max_displacement + 1)) - max_displacement;
+        i32 j = i + (rand() % (2 * max_displacement + 1)) - max_displacement;
         if (j < 0) j = 0;
         if (j >= arr_length) j = arr_length - 1;
 
-        swap(&arr[i], &arr[j]);
+        SWAP(i32, arr + i, arr + j);
     } 
 
-    for (int i = 0; i < options_length; ++i)
+    for (i32 i = 0; i < options_length; ++i)
     {
-        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        i32 *copy_arr = malloc(arr_length * sizeof *copy_arr);
         memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
 
         copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, "Partially");
@@ -87,7 +88,7 @@ void partially_sorted_benchmark(char **options, int options_length, int arr_leng
     free(arr);
 }
 
-int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mode)
+i32 *benchmark(char *option, i32 *arr, i32 length, FILE *csv_out, const char *mode)
 {
     if (strcmp("kind_stalin", option) == 0 && length >= 100000)
         return arr;
@@ -128,8 +129,8 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
 
     double elapsed = end - start;
 
-    int check = 1;
-    for (int i = 1; i < length; i++)
+    i32 check = 1;
+    for (i32 i = 1; i < length; i++)
     {
         if (arr[i - 1] > arr[i])
         {
@@ -151,20 +152,20 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
     return arr;
 }
 
-void generate_monotonic_random_steps(int *arr, int length, int max_step)
+void generate_monotonic_random_steps(i32 *arr, i32 length, i32 max_step)
 {
     if (length <= 0)
         return;
 
-    int current = 0;
+    i32 current = 0;
     arr[0] = current;
 
     if (max_step > 0)
     {
         // Ascending
-        for (int i = 1; i < length; i++)
+        for (i32 i = 1; i < length; i++)
         {
-            int s = 1 + rand() % max_step;
+            i32 s = 1 + rand() % max_step;
             current += s;
             arr[i] = current;
         }
@@ -173,9 +174,9 @@ void generate_monotonic_random_steps(int *arr, int length, int max_step)
     {
         // Descending
         max_step = -max_step;  // make positive for rand()
-        for (int i = 1; i < length; i++)
+        for (i32 i = 1; i < length; i++)
         {
-            int s = 1 + rand() % max_step;
+            i32 s = 1 + rand() % max_step;
             current -= s;
             arr[i] = current;
         }

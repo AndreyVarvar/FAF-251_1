@@ -173,6 +173,20 @@ int main(int argc, char *argv[])
     //     print_separator('-', 20);
     //     monotonic_benchmark(options, options_length, arr_length, max_step, csv_out);
     // }
+    /* Partially sorted array */
+    // print_separator('=', 40);
+    // printf("Partially sorted array\n");
+    // print_separator('=', 40);
+    // max_displacement = 10;
+    // max_step = 10;
+    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    // {
+    //     printf("\n");
+    //     print_separator('-', 20);
+    //     printf("Length: %d\n", arr_length);
+    //     print_separator('-', 20);
+    //     partially_sorted_benchmark(options, options_length, arr_length, max_step, max_displacement, csv_out);
+    // }
 
     // fclose(csv_out);
 

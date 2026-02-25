@@ -8,6 +8,7 @@
 #include "sort_by_step.h"
 #include "draw.h"
 #include "misc.h"
+#include "utils.h"
 
 void run(i32 *arr, i32 length)
 {
@@ -42,7 +43,7 @@ void run(i32 *arr, i32 length)
     SDL_SetTextureScaleMode(display, SDL_SCALEMODE_NEAREST);
 
     SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
-    SortData sort_data = {-1, -1, -1, -1, length, NULL};
+    SortData sort_data = {.length = length};
     i32 *indices = malloc(length * sizeof(i32));
 
     for (i32 i = 0; i < length; i++)
@@ -56,7 +57,8 @@ void run(i32 *arr, i32 length)
         alt_indices[i] = i;
     }
 
-    while (!heap_sort_step(arr, alt_indices, &sort_data)) {}
+    while (!tim_sort_step(arr, alt_indices, &sort_data)) {}
+
 
     SDL_Color *color_array = generate_gradient_array(alt_indices, array_width, array_height);
 
@@ -75,10 +77,10 @@ void run(i32 *arr, i32 length)
         current_time = SDL_GetPerformanceCounter();
         dt_accumulator += (double)(current_time - previous_time)/SDL_GetPerformanceFrequency();
 
-        while (dt_accumulator > 0)
+        while (dt_accumulator > dt)
         {
             dt_accumulator = 0;
-            heap_sort_step(arr, indices, &sort_data);
+            tim_sort_step(arr, indices, &sort_data);
             render_array(renderer, array_texture, indices, color_array, array_width, array_height);
         }
 

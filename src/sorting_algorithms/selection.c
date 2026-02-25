@@ -1,7 +1,8 @@
 #include "sorts.h"
+#include "../base.h"
 
-void selection_sort(int *arr, int length) {
-    int i, j, min_idx, temp;
+void selection_sort(i32 *arr, i32 length) {
+    i32 i, j, min_idx, temp;
     for (i = 0; i < length - 1; i++) {
         min_idx = i;
         for (j = i + 1; j < length; j++) {
