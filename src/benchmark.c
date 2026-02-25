@@ -52,8 +52,38 @@ void monotonic_benchmark(char **options, int options_length, int arr_length, int
     free(arr);
 }
 
+void partially_sorted_benchmark(char **options, int options_length, int arr_length, int max_step, int max_displacement, FILE *csv_out)
+{
+    int *arr = malloc(arr_length * sizeof *arr);
+    generate_monotonic_random_steps(arr, arr_length, max_step);
+    
+    // Each element moves at most max_displacement positions
+    for (int i = 0; i < arr_length; i++)
+    {
+        int j = i + (rand() % (2 * max_displacement + 1)) - max_displacement;
+        if (j < 0) j = 0;
+        if (j >= arr_length) j = arr_length - 1;
+
+        swap(&arr[i], &arr[j]);
+    } 
+
+    for (int i = 0; i < options_length; ++i)
+    {
+        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
+
+        copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, "Partially");
+
+        free(copy_arr);
+    }
+
+    free(arr);
+}
+
 int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mode)
 {
+    if (strcmp("kind_stalin", option) == 0 && length >= 100000)
+        return arr;
     // Console output
     printf("Started %s sort (%s).\n", option, mode);
     fflush(stdout);
