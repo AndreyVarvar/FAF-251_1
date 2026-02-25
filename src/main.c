@@ -14,7 +14,8 @@ int main(void) {
         "tim",
         "quick",
         "radix",
-        "stalin"
+        "cruel_stalin",
+        "kind_stalin"
     };
     int options_length = sizeof(options) / sizeof(options[0]);
 
@@ -38,6 +39,11 @@ int main(void) {
     print_separator('=', 40);
     for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
     {
+        if (arr_length == 100000)//remove kind stalin after 10000
+        {
+            options_length--;
+            options[options_length] = NULL;
+        }
         printf("\n");
         print_separator('-', 20);
         printf("Length: %d\n", arr_length);

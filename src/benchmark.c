@@ -82,8 +82,10 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
         quick_sort(arr, length);
     else if (strcmp("radix", option) == 0)
         radix_sort(arr, length);
-    else if (strcmp("stalin", option) == 0)
+    else if (strcmp("cruel_stalin", option) == 0)
         arr = cruel_stalin_sort(arr, &length);
+    else if (strcmp("kind_stalin", option) == 0)
+        kind_stalin_sort(arr, length);
 
     clock_t end = clock();
 
