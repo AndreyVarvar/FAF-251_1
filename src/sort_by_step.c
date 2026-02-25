@@ -404,3 +404,139 @@ i32 tim_sort_step(i32 *arr, i32 *indices, SortData *sd)
         }
     }
 }
+
+// a is the array, i is the indices array.
+static i32 median_of_three_index(i32 *a, i32 *i, i32 low, i32 mid, i32 high)
+{
+    // Whoever made this function I will find you.
+    if ((a[i[low]] <= a[i[mid]] && a[i[mid]] <= a[i[high]]) || (a[i[high]] <= a[i[mid]] && a[i[mid]] <= a[i[low]]))
+        return mid;
+    if ((a[i[mid]] <= a[i[low]] && a[i[low]] <= a[i[high]]) || (a[i[high]] <= a[i[low]] && a[i[low]] <= a[i[mid]]))
+        return low;
+    return high;
+}
+
+i32 partition(i32 *arr, i32 *indices, i32 low, i32 high)
+{
+    i32 x = arr[indices[high]];
+    i32 i = (low - 1);
+
+    for (i32 j = low; j <= high - 1; j++) {
+        if (arr[indices[j]] <= x) {
+            i++;
+            SWAP(i32, indices + i, indices + j);
+        }
+    }
+    SWAP(i32, indices + i + 1, indices + high);
+    return (i + 1);
+}
+
+static i32 quick_sort_step_rec(i32 *arr, i32 *indices, SortData *sd)
+{
+    switch (sd->phase) {
+        case 0: {
+            sd->high = sd->length - 1;
+            sd->low = 0;
+            sd->top = -1;
+            sd->stack = malloc(2 * sd->length * sizeof(i32));
+            sd->stack[++sd->top] = sd->low;
+            sd->stack[++sd->top] = sd->high;
+            sd->phase = 1;
+            return 0;
+        } break;
+        case 1: {
+            sd->high = sd->stack[sd->top--];
+            sd->low = sd->stack[sd->top--];
+
+            i32 p = partition(arr, indices, sd->low, sd->high);
+
+            if (p - 1 > sd->low) {
+                sd->stack[++sd->top] = sd->low;
+                sd->stack[++sd->top] = p - 1;
+            }
+
+            if (p + 1 < sd->high) {
+                sd->stack[++sd->top] = p + 1;
+                sd->stack[++sd->top] = sd->high;
+            }
+
+            if (sd->top < 0) sd->phase = 2;
+            return 0;
+        } break;
+        case 2: {
+            sd->high = 0;
+            sd->low = 0;
+            sd->top = 0;
+            free(sd->stack);
+            sd->stack = NULL;
+            sd->phase = 0;
+            return 1;
+        }
+    }
+}
+
+i32 quick_sort_step(i32 *arr, i32 *indices, SortData *sd)
+{
+    return quick_sort_step_rec(arr, indices, sd);
+}
+
+void radix_sort_step(i32 *restrict arr, i32 length)
+{
+    if (length <= 1)
+        return;
+
+    i32 *tmp = aligned_alloc(64, length * sizeof(i32));
+    if (!tmp)
+        return;
+
+    // Flip sign bit to handle signed i32s
+    for (i32 i = 0; i < length; i++)
+        arr[i] ^= 0x80000000;
+
+    i32 *in  = arr;
+    i32 *out = tmp;
+
+    const i32 RADIX = 256;
+    i32 count[RADIX];
+
+    for (i32 pass = 0; pass < 4; pass++)
+    {
+        memset(count, 0, sizeof(count));
+        i32 shift = pass * 8;
+
+        // Count digits
+        for (i32 i = 0; i < length; i++)
+            count[(in[i] >> shift) & 0xFF]++;
+
+        // Prefix sum
+        i32 sum = 0;
+        for (i32 i = 0; i < RADIX; i++)
+        {
+            i32 t = count[i];
+            count[i] = sum;
+            sum += t;
+        }
+
+        // Stable scatter
+        for (i32 i = 0; i < length; i++)
+        {
+            i32 d = (in[i] >> shift) & 0xFF;
+            out[count[d]++] = in[i];
+        }
+
+        // Swap buffers
+        i32 *tmp_ptr = in;
+        in = out;
+        out = tmp_ptr;
+    }
+
+    // If final data is in tmp, copy back once
+    if (in != arr)
+        memcpy(arr, in, length * sizeof(i32));
+
+    // Restore sign bit
+    for (i32 i = 0; i < length; i++)
+        arr[i] ^= 0x80000000;
+
+    free(tmp);
+}

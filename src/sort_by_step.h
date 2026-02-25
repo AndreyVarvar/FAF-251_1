@@ -3,17 +3,26 @@
 
 #include "base.h"
 
+// All hail the struct monolith
 typedef struct SortData
 {
-    i32 phase;
+    i32 phase; // All important phase var, don't you dare touch it or I will mince you.
     i32 i;
     i32 j;
     i32 misc; // For whatever reasons you may have ;)
+
     i32 gap; // Shell sort demands another variable
+
     i32 min_run; // TIM SORT WANTS MORE
     i32 runs_len;
     i32 length;
+
+    i32 high; // MMMOOOOOOOOOORRRREEEE FFFOOORR QUICCCKK SOORTT
+    i32 low;
+    i32 top;
+
     i32 *temp; // MMOOOORREE
+    i32 *stack;
     i32 (*runs)[2];
 } SortData;
 
@@ -24,5 +33,6 @@ i32 shell_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 merge_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 heap_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 tim_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
+i32 quick_sort_step(i32 *arr, i32 *indices, SortData *sd);
 
 #endif
