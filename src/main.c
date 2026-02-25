@@ -15,7 +15,7 @@ int main(void) {
         "quick",
         "radix",
         "cruel_stalin",
-        "kind_stalin"
+        // "kind_stalin"
     };
     int options_length = sizeof(options) / sizeof(options[0]);
 
@@ -35,45 +35,45 @@ int main(void) {
     fprintf(csv_out, "Mode,Sort,ArrayLength,TimeSeconds,Success\n");
 
     /* Randomly ordered elements */ 
-    // print_separator('=', 40);
-    // printf("Randomly ordered elements \n");
-    // print_separator('=', 40);
-    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
-    // {
-    //     printf("\n");
-    //     print_separator('-', 20);
-    //     printf("Length: %d\n", arr_length);
-    //     print_separator('-', 20);
-    //     random_benchmark(options, options_length, arr_length, time(NULL), csv_out);
-    // }
+    print_separator('=', 40);
+    printf("Randomly ordered elements \n");
+    print_separator('=', 40);
+    for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    {
+        printf("\n");
+        print_separator('-', 20);
+        printf("Length: %d\n", arr_length);
+        print_separator('-', 20);
+        random_benchmark(options, options_length, arr_length, time(NULL), csv_out);
+    }
 
-    // /* Elements sorted in ascending order */
-    // print_separator('=', 40);
-    // printf("Elements sorted in ascending order\n");
-    // print_separator('=', 40);
-    // max_step = 10;
-    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
-    // {
-    //     printf("\n");
-    //     print_separator('-', 20);
-    //     printf("Length: %d\n", arr_length);
-    //     print_separator('-', 20);
-    //     monotonic_benchmark(options, options_length, arr_length, max_step, csv_out);
-    // }
+    /* Elements sorted in ascending order */
+    print_separator('=', 40);
+    printf("Elements sorted in ascending order\n");
+    print_separator('=', 40);
+    max_step = 10;
+    for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    {
+        printf("\n");
+        print_separator('-', 20);
+        printf("Length: %d\n", arr_length);
+        print_separator('-', 20);
+        monotonic_benchmark(options, options_length, arr_length, max_step, csv_out);
+    }
 
-    // /* Elements sorted in descending order */
-    // print_separator('=', 40);
-    // printf("Elements sorted in descending order\n");
-    // print_separator('=', 40);
-    // max_step = -10;
-    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
-    // {
-    //     printf("\n");
-    //     print_separator('-', 20);
-    //     printf("Length: %d\n", arr_length);
-    //     print_separator('-', 20);
-    //     monotonic_benchmark(options, options_length, arr_length, max_step, csv_out);
-    // }
+    /* Elements sorted in descending order */
+    print_separator('=', 40);
+    printf("Elements sorted in descending order\n");
+    print_separator('=', 40);
+    max_step = -10;
+    for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    {
+        printf("\n");
+        print_separator('-', 20);
+        printf("Length: %d\n", arr_length);
+        print_separator('-', 20);
+        monotonic_benchmark(options, options_length, arr_length, max_step, csv_out);
+    }
 
     /* Partially sorted array */
     print_separator('=', 40);

@@ -7,6 +7,13 @@
 #include "sorts.h"
 #include "utils.h"
 
+static inline double now_sec(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return ts.tv_sec + ts.tv_nsec * 1e-9;
+}
+
 void random_benchmark(char **options, int options_length, int arr_length, time_t seed, FILE *csv_out)
 {
     srand(seed);
@@ -92,7 +99,7 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
     if (csv_out)
         fprintf(csv_out, "%s,%s,%d,", mode, option, length);
 
-    clock_t start = clock();
+    double start = now_sec();
 
     if (strcmp("selection", option) == 0)
         selection_sort(arr, length);
@@ -117,9 +124,9 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
     else if (strcmp("kind_stalin", option) == 0)
         kind_stalin_sort(arr, length);
 
-    clock_t end = clock();
+    double end = now_sec();
 
-    double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+    double elapsed = end - start;
 
     int check = 1;
     for (int i = 1; i < length; i++)
