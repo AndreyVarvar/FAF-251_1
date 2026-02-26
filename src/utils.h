@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "base.h"
+
 #define SWAP(T, a, b) {T temp = *(a); *(a) = *(b); *(b) = temp;}
 #define min(a, b) ((a) > (b) ? (b) : (a))
 

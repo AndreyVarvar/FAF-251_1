@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "base.h"
 #include "utils.h"
@@ -28,6 +29,7 @@ void print_separator(char c, i32 width)
         putchar(c);
     putchar('\n');
 }
+
 
 void print_help(char *program_name)
 {

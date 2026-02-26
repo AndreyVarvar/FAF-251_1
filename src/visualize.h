@@ -3,6 +3,6 @@
 
 #include <SDL3/SDL.h>
 
-void run(int *arr, int length);
+void run(u8 how_many_sorts, u8 sorts_selected[11]);
 
 #endif

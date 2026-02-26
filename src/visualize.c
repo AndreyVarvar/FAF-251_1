@@ -1,6 +1,7 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <SDL3/SDL.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "base.h"
@@ -8,10 +9,23 @@
 #include "sort_by_step.h"
 #include "draw.h"
 #include "misc.h"
-#include "utils.h"
+#include "benchmark.h"
 
-void run(i32 *arr, i32 length)
+void run(u8 how_many_sorts, u8 sorts_selected[11])
 {
+    step_sort_function sorts[11] = {
+        selection_sort_step, insertion_sort_step, bubble_sort_step,
+        shell_sort_step,
+        merge_sort_step,
+        heap_sort_step,
+        tim_sort_step,
+        quick_sort_step,
+        radix_sort_step,
+        kind_stalin_sort_step
+    };
+
+    i32 min_arr_length = 100;
+    i32 max_arr_length = 1000000;
 
     if (!SDL_Init(SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_VIDEO))
     {
@@ -35,68 +49,71 @@ void run(i32 *arr, i32 length)
         return;
     }
 
-    SDL_FRect array_rect = generate_array_rect(length);
-    i32 array_width = array_rect.w;
-    i32 array_height = array_rect.h;
-
-    SDL_Texture *display = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
-    SDL_SetTextureScaleMode(display, SDL_SCALEMODE_NEAREST);
-
-    SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
-    SortData sort_data = {.length = length};
-    i32 *indices = malloc(length * sizeof(i32));
-
-    for (i32 i = 0; i < length; i++)
+    for (i32 length = min_arr_length; length <= max_arr_length; length *= 10)
     {
-        indices[i] = i;
-    }
-    i32 *alt_indices = malloc(length * sizeof(i32));
-
-    for (i32 i = 0; i < length; i++)
-    {
-        alt_indices[i] = i;
-    }
-
-    while (!radix_sort_step(arr, alt_indices, &sort_data)) {}
-
-
-    SDL_Color *color_array = generate_gradient_array(alt_indices, array_width, array_height);
-
-    free(alt_indices);
-
-    u64 current_time = SDL_GetPerformanceCounter(), previous_time;
-    f64 dt_accumulator = 0, dt = (double)1/120;
-
-    u8 done = 0;
-    while (!done)
-    {
-        clear_texture(renderer, NULL);
-        clear_texture(renderer, display);
-
-        previous_time = current_time;
-        current_time = SDL_GetPerformanceCounter();
-        dt_accumulator += (double)(current_time - previous_time)/SDL_GetPerformanceFrequency();
-
-        while (dt_accumulator > dt)
+        for (i32 i = 0; i < how_many_sorts; i++)
         {
-            dt_accumulator = 0;
-            radix_sort_step(arr, indices, &sort_data);
-            render_array(renderer, array_texture, indices, color_array, array_width, array_height);
-        }
+            SDL_FRect array_rect = generate_array_rect(length);
+            i32 array_width = array_rect.w;
+            i32 array_height = array_rect.h;
 
-        SDL_Event event;
-        while (SDL_PollEvent(&event) == 1)
-        {
-            if (event.type == SDL_EVENT_QUIT) done = 1;
-        }
+            SDL_Texture *display = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, array_width, array_height);
+            SDL_SetTextureScaleMode(display, SDL_SCALEMODE_NEAREST);
 
-        SDL_SetRenderTarget(renderer, display);
-        SDL_RenderTexture(renderer, array_texture, &array_rect, &array_rect);
-        render_display(renderer, window, display);
-        SDL_RenderPresent(renderer);
+            SDL_Texture *array_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, array_width, array_height);
+            SortData sort_data = {.length = length};
+
+            i32 *indices = malloc(length * sizeof(i32));
+            for (i32 j = 0; j < length; j++) indices[j] = j;
+
+            i32 *alt_indices = malloc(length * sizeof(i32));
+            for (i32 j = 0; j < length; j++) alt_indices[j] = j;
+
+            i32 *arr = generate_random_i32_array(length);
+
+            while (!sorts[sorts_selected[i]](arr, alt_indices, &sort_data)) {}
+
+            u32 *color_array = generate_gradient_array(alt_indices, array_width, array_height);
+
+            free(alt_indices);
+
+            u64 current_time = SDL_GetPerformanceCounter(), previous_time;
+            f64 dt_accumulator = 0, dt = (double)1/120;
+
+            u8 done = 0;
+            while (!done)
+            {
+                clear_texture(renderer, NULL);
+                clear_texture(renderer, display);
+
+                previous_time = current_time;
+                current_time = SDL_GetPerformanceCounter();
+                dt_accumulator += (double)(current_time - previous_time)/SDL_GetPerformanceFrequency();
+
+                if (dt_accumulator > dt)
+                {
+                    dt_accumulator = 0;
+                    sorts[sorts_selected[i]](arr, indices, &sort_data);
+                    render_array(renderer, array_texture, indices, color_array, array_width, array_height);
+                }
+
+                SDL_Event event;
+                while (SDL_PollEvent(&event) == 1)
+                {
+                    if (event.type == SDL_EVENT_QUIT) done = 1;
+                }
+
+                SDL_SetRenderTarget(renderer, display);
+                SDL_RenderTexture(renderer, array_texture, NULL, NULL);
+                render_display(renderer, window, display);
+                SDL_RenderPresent(renderer);
+            }
+            free(indices);
+            SDL_DestroyTexture(display);
+            SDL_DestroyTexture(array_texture);
+        }
     }
 
-    free(indices);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

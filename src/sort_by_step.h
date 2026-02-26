@@ -32,6 +32,8 @@ typedef struct SortData
     i32 (*runs)[2];
 } SortData;
 
+typedef i32 (*step_sort_function)(i32 *arr, i32 *indices, SortData *sort_data);
+
 i32 selection_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 insertion_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 bubble_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
@@ -42,5 +44,7 @@ i32 tim_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 quick_sort_step(i32 *arr, i32 *indices, SortData *sd);
 i32 radix_sort_step(i32 *restrict arr, i32 *indices, SortData *sd);
 i32 kind_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd);
+
+
 
 #endif

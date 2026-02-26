@@ -24,7 +24,7 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) -c $^ -o $@
 
 run:
-	./$(BUILD_DIR)/$(BIN_NAME) -s lskfjs
+	./$(BUILD_DIR)/$(BIN_NAME) -m lskfjs
 
 clean:
 	rm -f $(BUILD_DIR)/*.o $(BIN_NAME)

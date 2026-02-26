@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <SDL3/SDL.h>
@@ -7,9 +6,9 @@
 #include "misc.h"
 
 
-SDL_Color *generate_gradient_array(i32 *arr, i32 width, i32 height)
+u32 *generate_gradient_array(i32 *arr, i32 width, i32 height)
 {
-    SDL_Color *color_array = calloc(width * height, sizeof(SDL_Color));
+    u32 *color_array = calloc(width * height, sizeof(SDL_Color));
     for (i32 y = 0; y < height; y++)
     {
         for (i32 x = 0; x < width; x++)
@@ -17,20 +16,28 @@ SDL_Color *generate_gradient_array(i32 *arr, i32 width, i32 height)
             u8 r = (u8)((double)x/ width * 255);
             u8 g = (u8)((double)(x + y)/(width * height) * 255);
             u8 b = (u8)((double)y/ height * 255);
-            color_array[arr[y * width + x]] = (SDL_Color) {r, g, b, 255};
+            color_array[arr[y * width + x]] = r << 24 | g << 16 | b << 8 | 255;
         }
     }
     return color_array;
 }
 
-void render_array(SDL_Renderer *renderer, SDL_Texture *texture, i32 *indices, SDL_Color *color_array, i32 width, i32 height)
+void render_array(SDL_Renderer *renderer, SDL_Texture *texture, i32 *indices, u32 *color_array, i32 width, i32 height)
 {
-    SDL_SetRenderTarget(renderer, texture);
-    for (i32 i = 0; i < width * height; i++)
+    void *pixels;
+    i32 pitch;
+    const SDL_PixelFormatDetails *px_details = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA8888);
+    SDL_LockTexture(texture, NULL, &pixels, &pitch);
+    u32 *row;
+    for (i32 y = 0; y < height; y++)
     {
-        SDL_SetRenderDrawColor(renderer, color_array[indices[i]].r, color_array[indices[i]].g, color_array[indices[i]].b, 255);
-        SDL_RenderPoint(renderer, i%width, i/width);
+        row = (u32*)((u8*)pixels + y * pitch);
+        for (i32 x = 0; x < width; x++)
+        {
+            row[x] = color_array[indices[y * width + x]];
+        }
     }
+    SDL_UnlockTexture(texture);
 }
 
 SDL_FRect generate_array_rect(i32 length)

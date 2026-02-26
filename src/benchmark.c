@@ -3,10 +3,9 @@
 #include <string.h>
 #include <time.h>
 
+#include "base.h"
 #include "benchmark.h"
 #include "./sorting_algorithms/sorts.h"
-#include "utils.h"
-#include "base.h"
 
 static inline double now_sec(void)
 {
@@ -15,17 +14,9 @@ static inline double now_sec(void)
     return ts.tv_sec + ts.tv_nsec * 1e-9;
 }
 
-void random_benchmark(char **options, i32 options_length, i32 arr_length, time_t seed, FILE *csv_out)
+void random_benchmark(char **options, i32 options_length, i32 arr_length, FILE *csv_out)
 {
-    srand(seed);
-
-    i32 *arr = malloc(arr_length * sizeof *arr);
-
-    for (i32 i = 0; i < arr_length; i++)
-    {
-        i32 sign = (rand() % 2) ? 1 : -1;
-        arr[i] = sign * rand();
-    }
+    i32 *arr = generate_random_i32_array(arr_length);
 
     for (i32 i = 0; i < options_length; ++i)
     {
@@ -129,15 +120,7 @@ i32 *benchmark(char *option, i32 *arr, i32 length, FILE *csv_out, const char *mo
 
     double elapsed = end - start;
 
-    i32 check = 1;
-    for (i32 i = 1; i < length; i++)
-    {
-        if (arr[i - 1] > arr[i])
-        {
-            check = 0;
-            break;
-        }
-    }
+    i32 check = is_sorted(arr, length);
 
     // Console output
     printf("%s sort %s.\nTime: %lf\n\n",
@@ -181,4 +164,31 @@ void generate_monotonic_random_steps(i32 *arr, i32 length, i32 max_step)
             arr[i] = current;
         }
     }
+}
+
+i32 is_sorted(i32 *arr, i32 length)
+{
+    i32 check = 1;
+    for (i32 i = 1; i < length; i++)
+    {
+        if (arr[i - 1] > arr[i])
+        {
+            check = 0;
+            break;
+        }
+    }
+    return check;
+}
+
+i32 *generate_random_i32_array(i32 length)
+{
+    i32 *arr = malloc(length * sizeof(i32));
+
+    for (i32 i = 0; i < length; i++)
+    {
+        i32 sign = (rand() % 2) ? 1 : -1;
+        arr[i] = sign * rand();
+    }
+
+    return arr;
 }

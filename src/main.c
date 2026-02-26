@@ -10,7 +10,7 @@
 #include "misc.h"
 #include "utils.h"
 
-int main(int argc, char *argv[])
+i32 main(i32 argc, char *argv[])
 {
     srand(time(NULL));
 
@@ -31,10 +31,10 @@ int main(int argc, char *argv[])
     };
 
     i32 flags_len = sizeof(sort_flags) / sizeof(sort_flags[0]);
-    u8 sorts_selected[10] = {0};
+    u8 sorts_selected[11] = {0};
     u8 how_many_sorts = 0;
 
-    char *output_file = "output.txt";
+    char *output_file = NULL;
     char *input_file = NULL;
     u8 visualize = 0;
 
@@ -115,10 +115,10 @@ int main(int argc, char *argv[])
         "cruel_stalin",
     };
 
-    int options_length = sizeof(options) / sizeof(options[0]);
+    i32 options_length = sizeof(options) / sizeof(options[0]);
 
-    int min_arr_length = 100;
-    int max_arr_length = 1000000;
+    i32 min_arr_length = 100;
+    i32 max_arr_length = 1000000;
 
     // // Open CSV file
     // FILE *csv_out = fopen("benchmark_results.csv", "w");
@@ -135,21 +135,21 @@ int main(int argc, char *argv[])
     // print_separator('=', 40);
     // printf("Randomly ordered elements \n");
     // print_separator('=', 40);
-    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    // for (i32 arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
     // {
     //     printf("\n");
     //     print_separator('-', 20);
     //     printf("Length: %d\n", arr_length);
     //     print_separator('-', 20);
-    //     random_benchmark(options, options_length, arr_length, time(NULL), csv_out);
+    //     random_benchmark(options, options_length, arr_length, csv_out);
     // }
     //
     // /* Elements sorted in ascending order */
     // print_separator('=', 40);
     // printf("Elements sorted in ascending order\n");
     // print_separator('=', 40);
-    // int max_step = 10;
-    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    // i32 max_step = 10;
+    // for (i32 arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
     // {
     //     printf("\n");
     //     print_separator('-', 20);
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
     // printf("Elements sorted in descending order\n");
     // print_separator('=', 40);
     // max_step = -10;
-    // for (int arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
+    // for (i32 arr_length = min_arr_length; arr_length <= max_arr_length; arr_length *= 10)
     // {
     //     printf("\n");
     //     print_separator('-', 20);
@@ -185,4 +185,8 @@ int main(int argc, char *argv[])
     //     print_separator('-', 20);
     //     partially_sorted_benchmark(options, options_length, arr_length, max_step, max_displacement, csv_out);
     // }
+    //
+    // fclose(csv_out);
+
+    run(how_many_sorts, sorts_selected);
 }
