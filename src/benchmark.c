@@ -7,6 +7,13 @@
 #include "sorts.h"
 #include "utils.h"
 
+static inline double now_sec(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return ts.tv_sec + ts.tv_nsec * 1e-9;
+}
+
 void random_benchmark(char **options, int options_length, int arr_length, time_t seed, FILE *csv_out)
 {
     srand(seed);
@@ -52,8 +59,38 @@ void monotonic_benchmark(char **options, int options_length, int arr_length, int
     free(arr);
 }
 
+void partially_sorted_benchmark(char **options, int options_length, int arr_length, int max_step, int max_displacement, FILE *csv_out)
+{
+    int *arr = malloc(arr_length * sizeof *arr);
+    generate_monotonic_random_steps(arr, arr_length, max_step);
+    
+    // Each element moves at most max_displacement positions
+    for (int i = 0; i < arr_length; i++)
+    {
+        int j = i + (rand() % (2 * max_displacement + 1)) - max_displacement;
+        if (j < 0) j = 0;
+        if (j >= arr_length) j = arr_length - 1;
+
+        swap(&arr[i], &arr[j]);
+    } 
+
+    for (int i = 0; i < options_length; ++i)
+    {
+        int *copy_arr = malloc(arr_length * sizeof *copy_arr);
+        memcpy(copy_arr, arr, arr_length * sizeof *copy_arr);
+
+        copy_arr = benchmark(options[i], copy_arr, arr_length, csv_out, "Partially");
+
+        free(copy_arr);
+    }
+
+    free(arr);
+}
+
 int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mode)
 {
+    if (strcmp("kind_stalin", option) == 0 && length >= 100000)
+        return arr;
     // Console output
     printf("Started %s sort (%s).\n", option, mode);
     fflush(stdout);
@@ -62,7 +99,7 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
     if (csv_out)
         fprintf(csv_out, "%s,%s,%d,", mode, option, length);
 
-    clock_t start = clock();
+    double start = now_sec();
 
     if (strcmp("selection", option) == 0)
         selection_sort(arr, length);
@@ -87,9 +124,9 @@ int *benchmark(char *option, int *arr, int length, FILE *csv_out, const char *mo
     else if (strcmp("kind_stalin", option) == 0)
         kind_stalin_sort(arr, length);
 
-    clock_t end = clock();
+    double end = now_sec();
 
-    double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+    double elapsed = end - start;
 
     int check = 1;
     for (int i = 1; i < length; i++)
