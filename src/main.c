@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 
     // fclose(csv_out);
 
-    i32 size = 10000;
+    i32 size = 100;
     i32 *arr = malloc(size * sizeof(i32));
 
     for (i32 i = 0; i < size; i++)

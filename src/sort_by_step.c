@@ -235,33 +235,36 @@ i32 merge_sort_step(i32 *arr, i32 *indices, SortData *sd)
     }
 }
 
-static void build_max_heap(i32 *arr, i32 *indices, SortData *sd)
-{
-    for (i32 i = 1; i < sd->length; i++)
-    {
-        if (arr[indices[i]] > arr[indices[(i - 1)/2]])
-        {
-            i32 j = i;
-            while (arr[indices[j]] > arr[indices[(j - 1)/2]])
-            {
-                SWAP(i32, indices + j, indices + (j - 1)/2);
-                j = (j - 1)/2;
-            }
-        }
-    }
-}
 
 i32 heap_sort_step(i32 *arr, i32 *indices, SortData *sd)
 {
     switch (sd->phase) {
         case 0: {
-            build_max_heap(arr, indices, sd);
-            sd->i = sd->length - 1;
-            sd->j = 0;
+            sd->i = 1;
+            sd->j = 1;
             sd->phase = 1;
             return 0;
         } break;
         case 1: {
+            if (arr[indices[sd->i]] > arr[indices[(sd->i - 1)/2]])
+            {
+                sd->j = sd->i;
+                while (arr[indices[sd->j]] > arr[indices[(sd->j - 1)/2]])
+                {
+                    SWAP(i32, indices + sd->j, indices + (sd->j - 1)/2);
+                    sd->j = (sd->j - 1)/2;
+                }
+            }
+            sd->i++;
+            if (sd->i >= sd->length) 
+            {
+                sd->i = sd->length - 1;
+                sd->j = 0;
+                sd->phase = 2;
+            }
+            return 0;
+        }
+        case 2: {
             SWAP(i32, indices, indices + sd->i);
             sd->j = 0;
             i32 index;
@@ -277,10 +280,10 @@ i32 heap_sort_step(i32 *arr, i32 *indices, SortData *sd)
             } while (index < sd->i);
 
             sd->i--;
-            if (sd->i <= 0) sd->phase = 2;
+            if (sd->i <= 0) sd->phase = 3;
             return 0;
         } break;
-        case 2: {
+        case 3: {
             sd->i = 0;
             sd->j = 0;
             sd->phase = 0;
@@ -480,63 +483,139 @@ i32 quick_sort_step(i32 *arr, i32 *indices, SortData *sd)
     return quick_sort_step_rec(arr, indices, sd);
 }
 
-void radix_sort_step(i32 *restrict arr, i32 length)
+i32 radix_sort_step(i32 *restrict arr, i32 *indices, SortData *sd)
 {
-    if (length <= 1)
-        return;
-
-    i32 *tmp = aligned_alloc(64, length * sizeof(i32));
-    if (!tmp)
-        return;
-
-    // Flip sign bit to handle signed i32s
-    for (i32 i = 0; i < length; i++)
-        arr[i] ^= 0x80000000;
-
-    i32 *in  = arr;
-    i32 *out = tmp;
-
-    const i32 RADIX = 256;
-    i32 count[RADIX];
-
-    for (i32 pass = 0; pass < 4; pass++)
+    switch (sd->phase)
     {
-        memset(count, 0, sizeof(count));
-        i32 shift = pass * 8;
+        case 0: {
+            if (sd->length <= 1)
+            {
+                sd->phase = 0;
+                return 0;
+            }
 
-        // Count digits
-        for (i32 i = 0; i < length; i++)
-            count[(in[i] >> shift) & 0xFF]++;
+            sd->temp = aligned_alloc(64, sd->length * sizeof(i32));
 
-        // Prefix sum
-        i32 sum = 0;
-        for (i32 i = 0; i < RADIX; i++)
-        {
-            i32 t = count[i];
-            count[i] = sum;
-            sum += t;
+            if (!sd->temp)
+            {
+                sd->phase = 0;
+                return 0;
+            }
+
+            // Flip sign bit to handle signed i32s
+            for (i32 i = 0; i < sd->length; i++)
+                arr[i] ^= 0x80000000;
+
+            sd->in = arr;
+            sd->out = sd->temp;
+
+            sd->misc = 256;
+            sd->count = malloc(sd->misc * sizeof(i32));
+            sd->i = 0;
+            sd->phase = 1;
+            return 0;
+        } break;
+        case 1: {
+            memset(sd->count, 0, sd->misc * sizeof(i32));
+            i32 shift = sd->i * 8;
+
+            // Count digits
+            for (i32 i = 0; i < sd->length; i++)
+                sd->count[(sd->in[indices[i]] >> shift) & 0xFF]++;
+
+            // Prefix sum
+            i32 sum = 0;
+            for (i32 i = 0; i < sd->misc; i++)
+            {
+                i32 t = sd->count[i];
+                sd->count[i] = sum;
+                sum += t;
+            }
+
+            // Stable scatter
+            for (i32 i = 0; i < sd->length; i++)
+            {
+                i32 d = (sd->in[indices[i]] >> shift) & 0xFF;
+                sd->out[sd->count[d]++] = indices[i];
+            }
+
+            // Swap buffers
+            i32 *tmp_ptr = sd->in;
+            sd->in = sd->out;
+            sd->out = tmp_ptr;
+
+            sd->i++;
+            if (sd->i >= 4) sd->phase = 2;
+            return 0;
+        } break;
+        case 2: {
+            // If final data is in tmp, copy back once
+            if (sd->in != arr)
+                memcpy(indices, sd->in, sd->length * sizeof(i32));
+
+            // Restore sign bit
+            for (i32 i = 0; i < sd->length; i++)
+                arr[i] ^= 0x80000000;
+
+            sd->phase = 3;
+            return 0;
+        } break;
+        case 3: {
+            free(sd->temp);
+            sd->temp = NULL;
+            free(sd->count);
+            sd->count = NULL;
+            sd->phase = 0;
+            return 1;
         }
-
-        // Stable scatter
-        for (i32 i = 0; i < length; i++)
-        {
-            i32 d = (in[i] >> shift) & 0xFF;
-            out[count[d]++] = in[i];
-        }
-
-        // Swap buffers
-        i32 *tmp_ptr = in;
-        in = out;
-        out = tmp_ptr;
     }
+}
 
-    // If final data is in tmp, copy back once
-    if (in != arr)
-        memcpy(arr, in, length * sizeof(i32));
+static void move_to_front(i32 *arr, i32 src, i32 dst)
+{
+    i32 temp = arr[src];
+    for(i32 i = src; i > dst; --i)
+        arr[i] = arr[i - 1];
+    arr[dst] = temp;
+}
 
-    // Restore sign bit
-    for (i32 i = 0; i < length; i++)
-        arr[i] ^= 0x80000000;
-
-    free(tmp);
+i32 kind_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd)
+{
+    switch(sd->phase) {
+        case 0: {
+            sd->i = 0;
+            sd->j = 0;
+            sd->misc = 0;
+            sd->phase = 1;
+            return 0;
+        } break;
+        case 1: {
+            if (sd->i < sd->length - 1 - sd->j)
+            {
+                if(arr[indices[sd->i]] > arr[indices[sd->i + 1]])
+                {
+                    move_to_front(indices, sd->i + 1, sd->misc);
+                    ++sd->misc;
+                }
+                sd->i++;
+            } else {
+                if(sd->misc == 0) 
+                {
+                    sd->phase = 2;
+                    return 0;
+                }
+                sd->misc = 0;
+                sd->i = 0;
+                ++sd->j;
+            }
+            return 0;
+        } break;
+        case 2: {
+            sd->i = 0;
+            sd->j = 0;
+            sd->misc = 0;
+            sd->phase = 0;
+            return 1;
+        }
+    }
 }

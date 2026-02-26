@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
 
 #include "base.h"
 #include "draw.h"
@@ -35,4 +33,3 @@ void print_error()
 {
     fprintf(stderr, "%s", SDL_GetError());
 }
-

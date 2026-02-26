@@ -57,7 +57,7 @@ void run(i32 *arr, i32 length)
         alt_indices[i] = i;
     }
 
-    while (!quick_sort_step(arr, alt_indices, &sort_data)) {}
+    while (!radix_sort_step(arr, alt_indices, &sort_data)) {}
 
 
     SDL_Color *color_array = generate_gradient_array(alt_indices, array_width, array_height);
@@ -80,7 +80,7 @@ void run(i32 *arr, i32 length)
         while (dt_accumulator > dt)
         {
             dt_accumulator = 0;
-            quick_sort_step(arr, indices, &sort_data);
+            radix_sort_step(arr, indices, &sort_data);
             render_array(renderer, array_texture, indices, color_array, array_width, array_height);
         }
 
