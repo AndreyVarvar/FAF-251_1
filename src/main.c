@@ -24,19 +24,15 @@ int main(int argc, char *argv[])
         "-m", // Merge sort
         "-h", // Heap sort
         "-t", // Tim sort
-        "-st", // Stalin sort
-        "-r", // Stalin sort
         "-q", // Quick sort
+        "-r", // radix sort
+        "-kst", // kind Stalin sort
+        "-cst", // cruel Stalin sort
     };
 
     i32 flags_len = sizeof(sort_flags) / sizeof(sort_flags[0]);
-    u8 sorts_selected[flags_len] = {};
+    u8 sorts_selected[10] = {0};
     u8 how_many_sorts = 0;
-
-    for (u8 i=0;i<flags_len;i++)
-    {
-        sorts_selected[i] = 0;
-    }
 
     char *output_file = "output.txt";
     char *input_file = NULL;
@@ -115,7 +111,8 @@ int main(int argc, char *argv[])
         "tim",
         "quick",
         "radix",
-        "stalin"
+        "kind_stalin",
+        "cruel_stalin",
     };
 
     int options_length = sizeof(options) / sizeof(options[0]);
@@ -188,6 +185,4 @@ int main(int argc, char *argv[])
     //     print_separator('-', 20);
     //     partially_sorted_benchmark(options, options_length, arr_length, max_step, max_displacement, csv_out);
     // }
-    // Open CSV file
-
 }

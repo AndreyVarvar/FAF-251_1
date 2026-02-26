@@ -39,8 +39,10 @@ void print_help(char *program_name)
     printf("\t-m\tUse Merge sort.\n");
     printf("\t-h\tUse Heap sort.\n");
     printf("\t-t\tUse Time sort.\n");
-    printf("\t-st\tUse Stalin sort.\n");
     printf("\t-q\tUse Quick sort.\n");
+    printf("\t-r\tUse Radix sort.\n");
+    printf("\t-st\tUse kind Stalin sort.\n");
+    printf("\t-st\tUse crue Stalin sort.\n");
     printf("\t-g\tVisualize the sorting process.\n");
     printf("\t-o\tPlace output into <file>.\n");
     printf("\t--help\tDisplay useful info.\n");
