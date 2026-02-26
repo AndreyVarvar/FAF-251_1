@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
         "-h", // Heap sort
         "-t", // Tim sort
         "-st", // Stalin sort
+        "-r", // Stalin sort
         "-q", // Quick sort
     };
 
@@ -187,19 +188,6 @@ int main(int argc, char *argv[])
     //     print_separator('-', 20);
     //     partially_sorted_benchmark(options, options_length, arr_length, max_step, max_displacement, csv_out);
     // }
+    // Open CSV file
 
-    // fclose(csv_out);
-
-    i32 size = 100;
-    i32 *arr = malloc(size * sizeof(i32));
-
-    for (i32 i = 0; i < size; i++)
-    {
-        i32 sign = (rand() % 2 == 1) ? 1 : -1;
-        arr[i] = (sign) * rand();
-    }
-
-    run(arr, size);
-
-    free(arr);
 }

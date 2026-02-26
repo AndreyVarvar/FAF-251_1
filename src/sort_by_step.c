@@ -485,67 +485,61 @@ i32 quick_sort_step(i32 *arr, i32 *indices, SortData *sd)
 
 i32 radix_sort_step(i32 *restrict arr, i32 *indices, SortData *sd)
 {
-    switch (sd->phase)
-    {
+    switch (sd->phase) {
         case 0: {
-            if (sd->length <= 1)
-            {
-                sd->phase = 0;
-                return 0;
-            }
+            if (sd->length <= 1) return 1;
 
             sd->temp = aligned_alloc(64, sd->length * sizeof(i32));
-
-            if (!sd->temp)
-            {
-                sd->phase = 0;
-                return 0;
-            }
+            if (!sd->temp) return 1;
 
             // Flip sign bit to handle signed i32s
             for (i32 i = 0; i < sd->length; i++)
                 arr[i] ^= 0x80000000;
 
-            sd->in = arr;
+            sd->in  = arr;
             sd->out = sd->temp;
 
             sd->misc = 256;
             sd->count = malloc(sd->misc * sizeof(i32));
-            sd->i = 0;
+
+            if (!sd->count) return 1;
+
             sd->phase = 1;
             return 0;
         } break;
         case 1: {
-            memset(sd->count, 0, sd->misc * sizeof(i32));
-            i32 shift = sd->i * 8;
 
-            // Count digits
-            for (i32 i = 0; i < sd->length; i++)
-                sd->count[(sd->in[indices[i]] >> shift) & 0xFF]++;
-
-            // Prefix sum
-            i32 sum = 0;
-            for (i32 i = 0; i < sd->misc; i++)
+            for (i32 pass = 0; pass < 4; pass++)
             {
-                i32 t = sd->count[i];
-                sd->count[i] = sum;
-                sum += t;
+                memset(sd->count, 0, sd->misc * sizeof(i32));
+                i32 shift = pass * 8;
+
+                // Count digits
+                for (i32 i = 0; i < sd->length; i++)
+                    sd->count[(sd->in[indices[i]] >> shift) & 0xFF]++;
+
+                // Prefix sum
+                i32 sum = 0;
+                for (i32 i = 0; i < sd->misc; i++)
+                {
+                    i32 t = sd->count[i];
+                    sd->count[i] = sum;
+                    sum += t;
+                }
+
+                // Stable scatter
+                for (i32 i = 0; i < sd->length; i++)
+                {
+                    i32 d = (sd->in[indices[i]] >> shift) & 0xFF;
+                    sd->out[sd->count[d]++] = indices[i];
+                }
+
+                // Swap buffers
+                i32 *tmp_ptr = sd->in;
+                sd->in = sd->out;
+                sd->out = tmp_ptr;
             }
-
-            // Stable scatter
-            for (i32 i = 0; i < sd->length; i++)
-            {
-                i32 d = (sd->in[indices[i]] >> shift) & 0xFF;
-                sd->out[sd->count[d]++] = indices[i];
-            }
-
-            // Swap buffers
-            i32 *tmp_ptr = sd->in;
-            sd->in = sd->out;
-            sd->out = tmp_ptr;
-
-            sd->i++;
-            if (sd->i >= 4) sd->phase = 2;
+            sd->phase = 2;
             return 0;
         } break;
         case 2: {
@@ -557,18 +551,20 @@ i32 radix_sort_step(i32 *restrict arr, i32 *indices, SortData *sd)
             for (i32 i = 0; i < sd->length; i++)
                 arr[i] ^= 0x80000000;
 
+            free(sd->temp);
+            free(sd->count);
+            sd->temp = NULL;
+            sd->count = NULL;
             sd->phase = 3;
             return 0;
         } break;
         case 3: {
-            free(sd->temp);
-            sd->temp = NULL;
-            free(sd->count);
-            sd->count = NULL;
             sd->phase = 0;
             return 1;
         }
     }
+
+
 }
 
 static void move_to_front(i32 *arr, i32 src, i32 dst)

@@ -24,7 +24,7 @@ typedef struct SortData
     i32 low;
     i32 top;
 
-    i32 *in; // MMOOOORRRREEEEEEE FOR RADIX SORT
+    i32 *in;
     i32 *out;
     i32 *count;
     i32 *temp; // MMOOOORREE
