@@ -1,7 +1,7 @@
 CC := gcc
 LIBS := -lSDL3 -lm
 CFLAGS := -Wall -Wextra -O3 -march=native -funroll-loops
-BIN_NAME := main
+BIN_NAME := sortificusmaximus
 
 
 BUILD_DIR := build
@@ -15,7 +15,7 @@ SORTING_OBJ := $(SORTING_SRC:$(SORTING_DIR)/%.c=$(BUILD_DIR)/%.o)
 ALL_OBJ :=  $(SORTING_OBJ) $(SRC_OBJ)
 
 all: $(ALL_OBJ)
-	$(CC) $(BUILD_DIR)/*.o -o $(BUILD_DIR)/$(BIN_NAME) $(LIBS)
+	$(CC) $(BUILD_DIR)/*.o -o $(BIN_NAME) $(LIBS)
 
 $(BUILD_DIR)/%.o: $(SORTING_DIR)/%.c
 	$(CC) -c $^ -o $@

@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "base.h"
+#include "utils.h"
 #include "benchmark.h"
 #include "./sorting_algorithms/sorts.h"
 
@@ -179,6 +180,7 @@ i32 is_sorted(i32 *arr, i32 length)
     }
     return check;
 }
+
 
 i32 *generate_random_i32_array(i32 length)
 {

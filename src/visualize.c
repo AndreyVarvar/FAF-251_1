@@ -10,10 +10,12 @@
 #include "misc.h"
 #include "benchmark.h"
 
-void run(u8 how_many_sorts, u8 sorts_selected[11])
+void run(u8 how_many_sorts, i32 sorts_selected[11][2])
 {
     step_sort_function sorts[11] = {
-        selection_sort_step, insertion_sort_step, bubble_sort_step,
+        selection_sort_step,
+        insertion_sort_step,
+        bubble_sort_step,
         shell_sort_step,
         merge_sort_step,
         heap_sort_step,
@@ -70,7 +72,7 @@ void run(u8 how_many_sorts, u8 sorts_selected[11])
 
             i32 *arr = generate_random_i32_array(length);
 
-            while (!sorts[sorts_selected[i]](arr, alt_indices, &sort_data)) {}
+            while (!sorts[sorts_selected[i][0]](arr, alt_indices, &sort_data)) {}
 
             u32 *color_array = generate_gradient_array(alt_indices, array_width, array_height);
 
@@ -92,7 +94,7 @@ void run(u8 how_many_sorts, u8 sorts_selected[11])
                 if (dt_accumulator > dt && !is_sorted_by(arr, indices, length))
                 {
                     dt_accumulator = 0;
-                    sorts[sorts_selected[i]](arr, indices, &sort_data);
+                    sorts[sorts_selected[i][0]](arr, indices, &sort_data);
                     render_array(renderer, array_texture, indices, color_array, array_width, array_height);
                 }
 
