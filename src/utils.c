@@ -44,7 +44,6 @@ void print_help(char *program_name)
     printf("\t-q\tUse Quick sort.\n");
     printf("\t-r\tUse Radix sort.\n");
     printf("\t-kst\tUse kind Stalin sort.\n");
-    printf("\t-cst\tUse crue Stalin sort.\n");
     printf("\t-o\tPlace output into <file>.\n");
     printf("\t--benchmark\tBenchmark the selected sorting algorithms.\n");
     printf("\t--help\tDisplay useful info.\n");

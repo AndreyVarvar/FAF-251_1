@@ -2,7 +2,6 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <SDL3/SDL.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "base.h"
@@ -92,7 +91,7 @@ void run(i32 how_many_sorts, i32 (*sorts_selected)[2])
             free(alt_indices);
 
             u64 current_time = SDL_GetPerformanceCounter(), previous_time;
-            f64 dt_accumulator = 0, dt = (double)1/20;
+            f64 dt_accumulator = 0, dt = (double)1/120;
 
             u8 done = 0;
             while (!done)

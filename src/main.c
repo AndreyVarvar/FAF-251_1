@@ -14,7 +14,6 @@ i32 main(i32 argc, char *argv[])
 {
     srand(time(NULL));
 
-    // more concise than what was before (Sorry Max)
     char *sort_flags[] =
     {
         "-s", // Selection sort
@@ -27,7 +26,6 @@ i32 main(i32 argc, char *argv[])
         "-q", // Quick sort
         "-r", // radix sort
         "-kst", // kind Stalin sort
-        "-cst", // cruel Stalin sort
     };
 
     i32 flags_len = sizeof(sort_flags) / sizeof(sort_flags[0]);

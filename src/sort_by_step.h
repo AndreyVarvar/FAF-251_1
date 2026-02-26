@@ -26,6 +26,10 @@ typedef struct SortData
 
     i32 pass;
 
+    i32 new_length;
+    i32 current_element;
+    i32 stalin_index;
+
     i32 *in;
     i32 *out;
     i32 *count;

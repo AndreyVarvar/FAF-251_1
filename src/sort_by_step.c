@@ -614,36 +614,6 @@ i32 kind_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd)
     }
 }
 
-// i32 *cruel_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd)
-// {
-//     i32 new_length = 1;
-//     i32 current_element = arr[0];
-//     for (i32 i = 1; i < *length; ++i)
-//         if (arr[i] >= current_element)
-//         {
-//             current_element = arr[i];
-//             new_length++;
-//         }
-//
-//     i32 *new_arr = malloc(new_length * sizeof *new_arr);
-//
-//     current_element = arr[0];
-//     new_arr[0] = current_element;
-//
-//     i32 stalin_index = 1;
-//     for (i32 i = 1; i < *length; ++i)
-//         if (arr[i] >= current_element)
-//         {
-//             new_arr[stalin_index] = arr[i];
-//             current_element = arr[i];
-//             stalin_index++;
-//         }
-//
-//     free(arr);
-//     *length = new_length;
-//     return new_arr;
-// }
-
 i32 is_sorted_by(i32 *arr, i32 *indices, i32 length)
 {
     i32 check = 1;
