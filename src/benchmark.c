@@ -65,7 +65,7 @@ void partially_sorted_benchmark(char **options, i32 options_length, i32 arr_leng
         if (j >= arr_length) j = arr_length - 1;
 
         SWAP(i32, arr + i, arr + j);
-    } 
+    }
 
     for (i32 i = 0; i < options_length; ++i)
     {
@@ -181,7 +181,6 @@ i32 is_sorted(i32 *arr, i32 length)
     return check;
 }
 
-
 i32 *generate_random_i32_array(i32 length)
 {
     i32 *arr = malloc(length * sizeof(i32));
@@ -194,3 +193,4 @@ i32 *generate_random_i32_array(i32 length)
 
     return arr;
 }
+

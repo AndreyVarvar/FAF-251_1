@@ -31,8 +31,8 @@ i32 main(i32 argc, char *argv[])
     };
 
     i32 flags_len = sizeof(sort_flags) / sizeof(sort_flags[0]);
-    i32 sorts_selected[11][2] = {0};
-    u8 how_many_sorts = 0;
+    i32 (*sorts_selected)[2] = malloc(sizeof(i32[2]));
+    i32 how_many_sorts = 0;
 
     u8 visualize = 0;
     u8 benchmark = 0;
@@ -55,7 +55,7 @@ i32 main(i32 argc, char *argv[])
                         {
                             sorts_selected[how_many_sorts][0] = j;
                             sscanf(argv[i + 1], "%u", &sorts_selected[how_many_sorts][1]);
-                            how_many_sorts++;
+                            sorts_selected = realloc(sorts_selected, (++how_many_sorts + 1) * sizeof(i32[2]));
                             i++;
                         } else {
                             printf("No output amount of elements selected.\n");

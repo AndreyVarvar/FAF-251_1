@@ -5,6 +5,6 @@
 
 #include "base.h"
 
-void run(u8 how_many_sorts, i32 sorts_selected[11][2]);
+void run(i32 how_many_sorts, i32 sorts_selected[11][2]);
 
 #endif

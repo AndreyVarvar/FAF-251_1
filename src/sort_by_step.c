@@ -614,7 +614,7 @@ i32 kind_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd)
     }
 }
 
-// i32 *cruel_stalin_sort_step(i32 *arr, i32 *indices)
+// i32 *cruel_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd)
 // {
 //     i32 new_length = 1;
 //     i32 current_element = arr[0];
