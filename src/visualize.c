@@ -1,7 +1,6 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <SDL3/SDL.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "base.h"
@@ -78,7 +77,7 @@ void run(u8 how_many_sorts, u8 sorts_selected[11])
             free(alt_indices);
 
             u64 current_time = SDL_GetPerformanceCounter(), previous_time;
-            f64 dt_accumulator = 0, dt = (double)1/120;
+            f64 dt_accumulator = 0, dt = (double)1/20;
 
             u8 done = 0;
             while (!done)
@@ -90,7 +89,7 @@ void run(u8 how_many_sorts, u8 sorts_selected[11])
                 current_time = SDL_GetPerformanceCounter();
                 dt_accumulator += (double)(current_time - previous_time)/SDL_GetPerformanceFrequency();
 
-                if (dt_accumulator > dt)
+                if (dt_accumulator > dt && !is_sorted_by(arr, indices, length))
                 {
                     dt_accumulator = 0;
                     sorts[sorts_selected[i]](arr, indices, &sort_data);

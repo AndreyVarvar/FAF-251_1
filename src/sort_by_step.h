@@ -24,6 +24,8 @@ typedef struct SortData
     i32 low;
     i32 top;
 
+    i32 pass;
+
     i32 *in;
     i32 *out;
     i32 *count;
@@ -44,7 +46,6 @@ i32 tim_sort_step(i32 *arr, i32 *indices, SortData *sort_data);
 i32 quick_sort_step(i32 *arr, i32 *indices, SortData *sd);
 i32 radix_sort_step(i32 *restrict arr, i32 *indices, SortData *sd);
 i32 kind_stalin_sort_step(i32 *arr, i32 *indices, SortData *sd);
-
-
+i32 is_sorted_by(i32 *arr, i32 *indices, i32 length);
 
 #endif
