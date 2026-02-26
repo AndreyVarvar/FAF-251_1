@@ -54,8 +54,8 @@ dkms.conf
 # debug information files
 *.dwo
 
-sortificusmaximus
-main
-a.out
-benchmark_results.csv
+.sortificusmaximus
+.main
+.a.out
+.benchmark_results.csv
 .~lock.benchmark_results.csv#
