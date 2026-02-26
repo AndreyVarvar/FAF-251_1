@@ -33,7 +33,7 @@ void print_separator(char c, i32 width)
 void print_help(char *program_name)
 {
     printf("Usage: %s [options] source_file output_file.\n", program_name);
-    printf("When choosing a sort to visualize, one should declare the number of elements to sort.\n");
+    printf("When choosing a sort to visualize, one should declare the appropriate flag and number of elements to sort.\n");
     printf("\t-s\tUse Selection sort.\n");
     printf("\t-i\tUse Insertion sort.\n");
     printf("\t-b\tUse Bubble sort.\n");
@@ -46,7 +46,6 @@ void print_help(char *program_name)
     printf("\t-kst\tUse kind Stalin sort.\n");
     printf("\t-cst\tUse crue Stalin sort.\n");
     printf("\t-o\tPlace output into <file>.\n");
-    printf("\t--visualize\tVisualize the selected sorting algorithms.\n");
     printf("\t--benchmark\tBenchmark the selected sorting algorithms.\n");
     printf("\t--help\tDisplay useful info.\n");
 }

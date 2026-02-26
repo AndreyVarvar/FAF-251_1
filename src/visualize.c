@@ -1,3 +1,4 @@
+#include <SDL3/SDL_audio.h>
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <SDL3/SDL.h>

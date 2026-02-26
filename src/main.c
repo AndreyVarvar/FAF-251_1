@@ -34,7 +34,6 @@ i32 main(i32 argc, char *argv[])
     i32 (*sorts_selected)[2] = malloc(sizeof(i32[2]));
     i32 how_many_sorts = 0;
 
-    u8 visualize = 0;
     u8 benchmark = 0;
 
     // Goofy ahh argument parsing (Sorry Cristi)
@@ -64,10 +63,6 @@ i32 main(i32 argc, char *argv[])
                         break;
                     }
                 }
-                if (strcmp(argv[i], "--visualize") == 0)
-                {
-                    visualize = 1;
-                }
                 if (strcmp(argv[i], "--benchmark") == 0)
                 {
                     benchmark = 1;
@@ -85,7 +80,7 @@ i32 main(i32 argc, char *argv[])
         return 0;
     }
 
-    if (!visualize && !benchmark)
+    if (!benchmark && !how_many_sorts)
     {
         printf("Didn't choose to benchmark or visualize sorts.\n");
         return 0;
@@ -180,10 +175,8 @@ i32 main(i32 argc, char *argv[])
         }
 
         fclose(csv_out);
+        return 0;
     }
 
-    if (visualize)
-    {
-        run(how_many_sorts, sorts_selected);
-    }
+    run(how_many_sorts, sorts_selected);
 }
